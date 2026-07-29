@@ -15,7 +15,18 @@ type Particle = {
   accent: boolean;
 };
 
+type Spark = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  size: number;
+  color: string;
+};
+
 const COLORS = ["#d9ff43", "#b6f1df", "#f4f0e8"];
+const SPARK_COLORS = ["#ff7f5c", "#d9ff43", "#b6f1df", "#f4f0e8"];
 
 export function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,6 +51,7 @@ export function ParticleField() {
     let canvasVisible = true;
     let particles: Particle[] = [];
     let links: Array<[number, number]> = [];
+    let sparks: Spark[] = [];
 
     const pointer = {
       x: 0,
@@ -47,6 +59,7 @@ export function ParticleField() {
       velocityX: 0,
       velocityY: 0,
       active: false,
+      burst: 0,
     };
 
     const createParticles = () => {
@@ -135,6 +148,7 @@ export function ParticleField() {
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      sparks = [];
       createParticles();
     };
 
@@ -148,34 +162,37 @@ export function ParticleField() {
           const driftY =
             Math.sin(particle.phase * 1.6 + time * 0.00018) * 10;
           particle.vx +=
-            (particle.homeX + driftX - particle.x) * 0.004 * deltaScale;
+            (particle.homeX + driftX - particle.x) * 0.0028 * deltaScale;
           particle.vy +=
-            (particle.homeY + driftY - particle.y) * 0.004 * deltaScale;
+            (particle.homeY + driftY - particle.y) * 0.0028 * deltaScale;
 
           if (pointer.active) {
             const dx = pointer.x - particle.x;
             const dy = pointer.y - particle.y;
             const distance = Math.max(Math.hypot(dx, dy), 14);
-            const influence = mobile ? 220 : 270;
+            const influence = pointer.burst > 0.02 ? 240 : 175;
 
             if (distance < influence) {
               const falloff = 1 - distance / influence;
-              const force = -0.46 * Math.pow(falloff, 1.25);
+              const force =
+                pointer.burst > 0.02
+                  ? -0.48 * pointer.burst * falloff
+                  : -0.075 * falloff;
               particle.vx += (dx / distance) * force * deltaScale;
               particle.vy += (dy / distance) * force * deltaScale;
-              particle.vx += pointer.velocityX * falloff * 0.032;
-              particle.vy += pointer.velocityY * falloff * 0.032;
+              particle.vx += pointer.velocityX * falloff * 0.006;
+              particle.vy += pointer.velocityY * falloff * 0.006;
             }
           }
 
           const speed = Math.hypot(particle.vx, particle.vy);
-          if (speed > 5) {
-            particle.vx = (particle.vx / speed) * 5;
-            particle.vy = (particle.vy / speed) * 5;
+          if (speed > 3.2) {
+            particle.vx = (particle.vx / speed) * 3.2;
+            particle.vy = (particle.vy / speed) * 3.2;
           }
 
-          particle.vx *= Math.pow(0.91, deltaScale);
-          particle.vy *= Math.pow(0.91, deltaScale);
+          particle.vx *= Math.pow(0.94, deltaScale);
+          particle.vy *= Math.pow(0.94, deltaScale);
           particle.x += particle.vx * deltaScale;
           particle.y += particle.vy * deltaScale;
         }
@@ -207,13 +224,13 @@ export function ParticleField() {
               (particle.x - pointer.x) ** 2 +
               (particle.y - pointer.y) ** 2,
           }))
-          .filter(({ distance }) => distance < 270 ** 2)
+          .filter(({ distance }) => distance < 190 ** 2)
           .sort((a, b) => a.distance - b.distance)
-          .slice(0, 12);
+          .slice(0, 7);
 
         nearby.forEach(({ index, distance }) => {
           const particle = particles[index];
-          const normalizedDistance = Math.sqrt(distance) / 270;
+          const normalizedDistance = Math.sqrt(distance) / 190;
           context.beginPath();
           context.moveTo(pointer.x, pointer.y);
           context.lineTo(particle.x, particle.y);
@@ -227,15 +244,15 @@ export function ParticleField() {
 
       particles.forEach((particle) => {
         const speed = Math.hypot(particle.vx, particle.vy);
-        if (speed > 0.3) {
+        if (speed > 0.75) {
           context.beginPath();
           context.moveTo(
-            particle.x - particle.vx * 6,
-            particle.y - particle.vy * 6,
+            particle.x - particle.vx * 3.2,
+            particle.y - particle.vy * 3.2,
           );
           context.lineTo(particle.x, particle.y);
-          context.strokeStyle = "rgba(182, 241, 223, 0.42)";
-          context.lineWidth = 0.95;
+          context.strokeStyle = "rgba(182, 241, 223, 0.22)";
+          context.lineWidth = 0.75;
           context.stroke();
         }
 
@@ -265,6 +282,46 @@ export function ParticleField() {
         context.fill();
         context.globalAlpha = 1;
       });
+
+      if (!reducedMotion) {
+        sparks = sparks.filter((spark) => {
+          spark.x += spark.vx * deltaScale;
+          spark.y += spark.vy * deltaScale;
+          spark.vx *= Math.pow(0.965, deltaScale);
+          spark.vy *= Math.pow(0.965, deltaScale);
+          spark.life -= 0.02 * deltaScale;
+          return spark.life > 0;
+        });
+      }
+
+      context.globalCompositeOperation = "lighter";
+      sparks.forEach((spark) => {
+        const trailLength = 3.5 + (1 - spark.life) * 4.5;
+        context.beginPath();
+        context.moveTo(
+          spark.x - spark.vx * trailLength,
+          spark.y - spark.vy * trailLength,
+        );
+        context.lineTo(spark.x, spark.y);
+        context.strokeStyle = spark.color;
+        context.globalAlpha = Math.min(0.82, spark.life * 0.95);
+        context.lineWidth = Math.max(0.8, spark.size * 0.7);
+        context.stroke();
+
+        context.beginPath();
+        context.arc(
+          spark.x,
+          spark.y,
+          spark.size * (0.55 + spark.life * 0.45),
+          0,
+          Math.PI * 2,
+        );
+        context.fillStyle = spark.color;
+        context.globalAlpha = Math.min(1, spark.life * 1.25);
+        context.fill();
+      });
+      context.globalAlpha = 1;
+      context.globalCompositeOperation = "source-over";
     };
 
     const draw = (time: number) => {
@@ -289,6 +346,7 @@ export function ParticleField() {
 
       pointer.velocityX *= 0.68;
       pointer.velocityY *= 0.68;
+      pointer.burst *= 0.9;
       frame = requestAnimationFrame(draw);
     };
 
@@ -324,6 +382,33 @@ export function ParticleField() {
         pointer.y = nextY;
       }
       pointer.active = inside;
+
+      if (reducedMotion) render(performance.now(), 0);
+    };
+
+    const pressPointer = (event: PointerEvent) => {
+      updatePointer(event);
+      if (!pointer.active) return;
+
+      pointer.burst = 1;
+      const sparkCount = mobile ? 14 : 20;
+      const rotation = Math.random() * Math.PI * 2;
+      sparks = Array.from({ length: sparkCount }, (_, index) => {
+        const angle =
+          rotation +
+          (index / sparkCount) * Math.PI * 2 +
+          (Math.random() - 0.5) * 0.16;
+        const speed = 2.4 + Math.random() * 3.4;
+        return {
+          x: pointer.x,
+          y: pointer.y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 0.82 + Math.random() * 0.18,
+          size: 1.05 + Math.random() * 1.35,
+          color: SPARK_COLORS[index % SPARK_COLORS.length],
+        };
+      });
 
       if (reducedMotion) render(performance.now(), 0);
     };
@@ -365,6 +450,7 @@ export function ParticleField() {
     observer.observe(canvas);
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", updatePointer, { passive: true });
+    window.addEventListener("pointerdown", pressPointer, { passive: true });
     document.addEventListener("visibilitychange", updateVisibility);
     motionPreference.addEventListener("change", updateMotion);
 
@@ -373,6 +459,7 @@ export function ParticleField() {
       observer.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", updatePointer);
+      window.removeEventListener("pointerdown", pressPointer);
       document.removeEventListener("visibilitychange", updateVisibility);
       motionPreference.removeEventListener("change", updateMotion);
     };
