@@ -15,7 +15,18 @@ type Particle = {
   accent: boolean;
 };
 
+type Spark = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  size: number;
+  color: string;
+};
+
 const COLORS = ["#d9ff43", "#b6f1df", "#f4f0e8"];
+const SPARK_COLORS = ["#ff7f5c", "#d9ff43", "#b6f1df", "#f4f0e8"];
 
 export function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,6 +51,7 @@ export function ParticleField() {
     let canvasVisible = true;
     let particles: Particle[] = [];
     let links: Array<[number, number]> = [];
+    let sparks: Spark[] = [];
 
     const pointer = {
       x: 0,
@@ -103,7 +115,7 @@ export function ParticleField() {
           }))
           .filter(({ otherIndex }) => otherIndex !== index)
           .sort((a, b) => a.distance - b.distance)
-          .slice(0, index % 4 === 0 ? 2 : 1);
+          .slice(0, index % 3 === 0 ? 2 : 1);
 
         nearest.forEach(({ otherIndex, distance }) => {
           if (distance > 170 ** 2) return;
@@ -136,6 +148,7 @@ export function ParticleField() {
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      sparks = [];
       createParticles();
     };
 
@@ -190,14 +203,16 @@ export function ParticleField() {
         const end = particles[endIndex];
         const distance = Math.hypot(end.x - start.x, end.y - start.y);
         if (distance > 190) return;
+        const alpha = 0.12 + 0.23 * (1 - distance / 190);
 
         context.beginPath();
         context.moveTo(start.x, start.y);
         context.lineTo(end.x, end.y);
-        context.strokeStyle = `rgba(217, 255, 67, ${
-          0.055 + 0.12 * (1 - distance / 190)
-        })`;
-        context.lineWidth = 0.8;
+        context.strokeStyle =
+          (startIndex + endIndex) % 4 === 0
+            ? `rgba(182, 241, 223, ${alpha * 0.9})`
+            : `rgba(217, 255, 67, ${alpha})`;
+        context.lineWidth = 1.05;
         context.stroke();
       });
 
@@ -220,9 +235,9 @@ export function ParticleField() {
           context.moveTo(pointer.x, pointer.y);
           context.lineTo(particle.x, particle.y);
           context.strokeStyle = `rgba(182, 241, 223, ${
-            0.12 + 0.34 * (1 - normalizedDistance)
+            0.17 + 0.42 * (1 - normalizedDistance)
           })`;
-          context.lineWidth = 0.9;
+          context.lineWidth = 1.05;
           context.stroke();
         });
       }
@@ -268,21 +283,45 @@ export function ParticleField() {
         context.globalAlpha = 1;
       });
 
-      if (pointer.active && pointer.burst > 0.02) {
+      if (!reducedMotion) {
+        sparks = sparks.filter((spark) => {
+          spark.x += spark.vx * deltaScale;
+          spark.y += spark.vy * deltaScale;
+          spark.vx *= Math.pow(0.965, deltaScale);
+          spark.vy *= Math.pow(0.965, deltaScale);
+          spark.life -= 0.02 * deltaScale;
+          return spark.life > 0;
+        });
+      }
+
+      context.globalCompositeOperation = "lighter";
+      sparks.forEach((spark) => {
+        const trailLength = 3.5 + (1 - spark.life) * 4.5;
+        context.beginPath();
+        context.moveTo(
+          spark.x - spark.vx * trailLength,
+          spark.y - spark.vy * trailLength,
+        );
+        context.lineTo(spark.x, spark.y);
+        context.strokeStyle = spark.color;
+        context.globalAlpha = Math.min(0.82, spark.life * 0.95);
+        context.lineWidth = Math.max(0.8, spark.size * 0.7);
+        context.stroke();
+
         context.beginPath();
         context.arc(
-          pointer.x,
-          pointer.y,
-          28 + (1 - pointer.burst) * 112,
+          spark.x,
+          spark.y,
+          spark.size * (0.55 + spark.life * 0.45),
           0,
           Math.PI * 2,
         );
-        context.strokeStyle = `rgba(255, 127, 92, ${
-          0.66 * pointer.burst
-        })`;
-        context.lineWidth = 1.5;
-        context.stroke();
-      }
+        context.fillStyle = spark.color;
+        context.globalAlpha = Math.min(1, spark.life * 1.25);
+        context.fill();
+      });
+      context.globalAlpha = 1;
+      context.globalCompositeOperation = "source-over";
     };
 
     const draw = (time: number) => {
@@ -349,7 +388,29 @@ export function ParticleField() {
 
     const pressPointer = (event: PointerEvent) => {
       updatePointer(event);
-      if (pointer.active) pointer.burst = 1;
+      if (!pointer.active) return;
+
+      pointer.burst = 1;
+      const sparkCount = mobile ? 14 : 20;
+      const rotation = Math.random() * Math.PI * 2;
+      sparks = Array.from({ length: sparkCount }, (_, index) => {
+        const angle =
+          rotation +
+          (index / sparkCount) * Math.PI * 2 +
+          (Math.random() - 0.5) * 0.16;
+        const speed = 2.4 + Math.random() * 3.4;
+        return {
+          x: pointer.x,
+          y: pointer.y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 0.82 + Math.random() * 0.18,
+          size: 1.05 + Math.random() * 1.35,
+          color: SPARK_COLORS[index % SPARK_COLORS.length],
+        };
+      });
+
+      if (reducedMotion) render(performance.now(), 0);
     };
 
     const updateMotion = (event: MediaQueryListEvent) => {
