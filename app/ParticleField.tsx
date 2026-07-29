@@ -126,7 +126,8 @@ export function ParticleField() {
       const lowPowerDevice =
         typeof navigator.hardwareConcurrency === "number" &&
         navigator.hardwareConcurrency <= 4;
-      targetFrameLength = 1000 / (mobile || lowPowerDevice ? 45 : 60);
+      targetFrameLength =
+        1000 / (reducedMotion ? 30 : mobile || lowPowerDevice ? 45 : 60);
       const dpr = Math.min(
         window.devicePixelRatio || 1,
         mobile ? 1.25 : 1.5,
@@ -143,42 +144,47 @@ export function ParticleField() {
       context.globalCompositeOperation = "source-over";
 
       particles.forEach((particle) => {
-        if (!reducedMotion) {
-          const driftX = Math.cos(particle.phase + time * 0.00022) * 12;
-          const driftY =
-            Math.sin(particle.phase * 1.6 + time * 0.00018) * 10;
-          particle.vx +=
-            (particle.homeX + driftX - particle.x) * 0.004 * deltaScale;
-          particle.vy +=
-            (particle.homeY + driftY - particle.y) * 0.004 * deltaScale;
+        const driftScale = reducedMotion ? 0.34 : 1;
+        const interactionScale = reducedMotion ? 0.82 : 1;
+        const driftX =
+          Math.cos(particle.phase + time * 0.00022) * 12 * driftScale;
+        const driftY =
+          Math.sin(particle.phase * 1.6 + time * 0.00018) * 10 * driftScale;
+        particle.vx +=
+          (particle.homeX + driftX - particle.x) * 0.004 * deltaScale;
+        particle.vy +=
+          (particle.homeY + driftY - particle.y) * 0.004 * deltaScale;
 
-          if (pointer.active) {
-            const dx = pointer.x - particle.x;
-            const dy = pointer.y - particle.y;
-            const distance = Math.max(Math.hypot(dx, dy), 14);
-            const influence = mobile ? 220 : 270;
+        if (pointer.active) {
+          const dx = pointer.x - particle.x;
+          const dy = pointer.y - particle.y;
+          const distance = Math.max(Math.hypot(dx, dy), 14);
+          const influence = mobile ? 220 : 270;
 
-            if (distance < influence) {
-              const falloff = 1 - distance / influence;
-              const force = -0.46 * Math.pow(falloff, 1.25);
-              particle.vx += (dx / distance) * force * deltaScale;
-              particle.vy += (dy / distance) * force * deltaScale;
-              particle.vx += pointer.velocityX * falloff * 0.032;
-              particle.vy += pointer.velocityY * falloff * 0.032;
-            }
+          if (distance < influence) {
+            const falloff = 1 - distance / influence;
+            const force =
+              -0.46 * Math.pow(falloff, 1.25) * interactionScale;
+            particle.vx += (dx / distance) * force * deltaScale;
+            particle.vy += (dy / distance) * force * deltaScale;
+            particle.vx +=
+              pointer.velocityX * falloff * 0.032 * interactionScale;
+            particle.vy +=
+              pointer.velocityY * falloff * 0.032 * interactionScale;
           }
-
-          const speed = Math.hypot(particle.vx, particle.vy);
-          if (speed > 5) {
-            particle.vx = (particle.vx / speed) * 5;
-            particle.vy = (particle.vy / speed) * 5;
-          }
-
-          particle.vx *= Math.pow(0.91, deltaScale);
-          particle.vy *= Math.pow(0.91, deltaScale);
-          particle.x += particle.vx * deltaScale;
-          particle.y += particle.vy * deltaScale;
         }
+
+        const speed = Math.hypot(particle.vx, particle.vy);
+        const maximumSpeed = reducedMotion ? 3.4 : 5;
+        if (speed > maximumSpeed) {
+          particle.vx = (particle.vx / speed) * maximumSpeed;
+          particle.vy = (particle.vy / speed) * maximumSpeed;
+        }
+
+        particle.vx *= Math.pow(0.91, deltaScale);
+        particle.vy *= Math.pow(0.91, deltaScale);
+        particle.x += particle.vx * deltaScale;
+        particle.y += particle.vy * deltaScale;
       });
 
       links.forEach(([startIndex, endIndex]) => {
@@ -268,11 +274,7 @@ export function ParticleField() {
     };
 
     const draw = (time: number) => {
-      if (
-        reducedMotion ||
-        document.hidden ||
-        !canvasVisible
-      ) {
+      if (document.hidden || !canvasVisible) {
         frame = 0;
         return;
       }
@@ -293,12 +295,7 @@ export function ParticleField() {
     };
 
     const startAnimation = () => {
-      if (
-        frame ||
-        reducedMotion ||
-        document.hidden ||
-        !canvasVisible
-      ) {
+      if (frame || document.hidden || !canvasVisible) {
         return;
       }
       lastFrameTime = performance.now();
@@ -314,25 +311,43 @@ export function ParticleField() {
         nextX <= bounds.width &&
         nextY >= 0 &&
         nextY <= bounds.height;
+      const wasActive = pointer.active;
+      let moveX = 0;
+      let moveY = 0;
 
       if (inside) {
-        if (pointer.active) {
-          pointer.velocityX = nextX - pointer.x;
-          pointer.velocityY = nextY - pointer.y;
+        if (wasActive) {
+          moveX = Math.max(-36, Math.min(36, nextX - pointer.x));
+          moveY = Math.max(-36, Math.min(36, nextY - pointer.y));
+          pointer.velocityX = moveX;
+          pointer.velocityY = moveY;
+
+          const directInfluence = mobile ? 220 : 270;
+          particles.forEach((particle) => {
+            const dx = nextX - particle.x;
+            const dy = nextY - particle.y;
+            const distance = Math.max(Math.hypot(dx, dy), 14);
+            if (distance >= directInfluence) return;
+
+            const falloff = 1 - distance / directInfluence;
+            const directPush = 3.4 * Math.pow(falloff, 1.2);
+            particle.x -= (dx / distance) * directPush;
+            particle.y -= (dy / distance) * directPush;
+            particle.x += moveX * falloff * 0.24;
+            particle.y += moveY * falloff * 0.24;
+          });
         }
         pointer.x = nextX;
         pointer.y = nextY;
       }
       pointer.active = inside;
-
-      if (reducedMotion) render(performance.now(), 0);
     };
 
     const updateMotion = (event: MediaQueryListEvent) => {
       reducedMotion = event.matches;
       cancelAnimationFrame(frame);
       frame = 0;
-      createParticles();
+      resize();
       render(0, 0);
       startAnimation();
     };
