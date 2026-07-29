@@ -79,8 +79,8 @@ export function ParticleField() {
           y: homeY,
           homeX,
           homeY,
-          vx: (Math.random() - 0.5) * 0.15,
-          vy: (Math.random() - 0.5) * 0.15,
+          vx: (Math.random() - 0.5) * 0.7,
+          vy: (Math.random() - 0.5) * 0.7,
           radius: index % 13 === 0 ? 3.1 : 1.2 + Math.random(),
           phase: Math.random() * Math.PI * 2,
           color: COLORS[index % COLORS.length],
@@ -143,18 +143,18 @@ export function ParticleField() {
       context.globalCompositeOperation = "source-over";
 
       particles.forEach((particle) => {
-        const driftScale = reducedMotion ? 0.4 : 1;
+        const wanderScale = reducedMotion ? 0.35 : 1;
         const interactionScale = reducedMotion ? 0.78 : 1;
-        const driftX =
-          Math.cos(particle.phase + time * 0.0002) * 13 * driftScale;
-        const driftY =
-          Math.sin(particle.phase * 1.6 + time * 0.00017) *
-          11 *
-          driftScale;
         particle.vx +=
-          (particle.homeX + driftX - particle.x) * 0.0035 * deltaScale;
+          Math.cos(particle.phase + time * 0.00034) *
+          0.0045 *
+          wanderScale *
+          deltaScale;
         particle.vy +=
-          (particle.homeY + driftY - particle.y) * 0.0035 * deltaScale;
+          Math.sin(particle.phase * 1.7 + time * 0.00029) *
+          0.0045 *
+          wanderScale *
+          deltaScale;
 
         if (pointer.active) {
           const dx = pointer.x - particle.x;
@@ -196,10 +196,42 @@ export function ParticleField() {
           particle.vy = (particle.vy / speed) * maximumSpeed;
         }
 
-        particle.vx *= Math.pow(0.92, deltaScale);
-        particle.vy *= Math.pow(0.92, deltaScale);
+        const drag = reducedMotion ? 0.987 : 0.992;
+        particle.vx *= Math.pow(drag, deltaScale);
+        particle.vy *= Math.pow(drag, deltaScale);
         particle.x += particle.vx * deltaScale;
         particle.y += particle.vy * deltaScale;
+
+        const edgePadding = 42;
+        if (particle.x < edgePadding) {
+          particle.vx +=
+            (edgePadding - particle.x) * 0.0008 * deltaScale;
+        } else if (particle.x > width - edgePadding) {
+          particle.vx -=
+            (particle.x - (width - edgePadding)) * 0.0008 * deltaScale;
+        }
+        if (particle.y < edgePadding) {
+          particle.vy +=
+            (edgePadding - particle.y) * 0.0008 * deltaScale;
+        } else if (particle.y > height - edgePadding) {
+          particle.vy -=
+            (particle.y - (height - edgePadding)) * 0.0008 * deltaScale;
+        }
+
+        if (particle.x < -20) {
+          particle.x = -20;
+          particle.vx = Math.abs(particle.vx) * 0.8;
+        } else if (particle.x > width + 20) {
+          particle.x = width + 20;
+          particle.vx = -Math.abs(particle.vx) * 0.8;
+        }
+        if (particle.y < -20) {
+          particle.y = -20;
+          particle.vy = Math.abs(particle.vy) * 0.8;
+        } else if (particle.y > height + 20) {
+          particle.y = height + 20;
+          particle.vy = -Math.abs(particle.vy) * 0.8;
+        }
       });
 
       links.forEach(([startIndex, endIndex]) => {
