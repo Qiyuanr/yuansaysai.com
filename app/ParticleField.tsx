@@ -5,14 +5,17 @@ import { useEffect, useRef } from "react";
 type Particle = {
   x: number;
   y: number;
+  homeX: number;
+  homeY: number;
   vx: number;
   vy: number;
   radius: number;
   phase: number;
   color: string;
+  accent: boolean;
 };
 
-const COLORS = ["#d9ff43", "#b6f1df", "#ff7f5c", "#f4f0e8"];
+const COLORS = ["#d9ff43", "#b6f1df", "#f4f0e8"];
 
 export function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -21,225 +24,312 @@ export function ParticleField() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const context = canvas.getContext("2d");
+    const context = canvas.getContext("2d", { alpha: true });
     if (!context) return;
 
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let reducedMotion = media.matches;
+    const motionPreference = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    let reducedMotion = motionPreference.matches;
     let width = 0;
     let height = 0;
+    let mobile = false;
+    let targetFrameLength = 1000 / 60;
+    let lastFrameTime = 0;
     let frame = 0;
+    let canvasVisible = true;
     let particles: Particle[] = [];
+    let links: Array<[number, number]> = [];
+
     const pointer = {
       x: 0,
       y: 0,
       velocityX: 0,
       velocityY: 0,
       active: false,
-      pressed: false,
       burst: 0,
     };
 
     const createParticles = () => {
-      const mobile = width < 720;
-      const count = reducedMotion ? 54 : mobile ? 118 : 188;
-      const centerX = width * (mobile ? 0.58 : 0.7);
-      const centerY = height * (mobile ? 0.47 : 0.5);
-      const spreadX = width * (mobile ? 0.44 : 0.29);
-      const spreadY = height * (mobile ? 0.25 : 0.37);
+      const lowPowerDevice =
+        typeof navigator.hardwareConcurrency === "number" &&
+        navigator.hardwareConcurrency <= 4;
+      const count = reducedMotion
+        ? 34
+        : mobile
+          ? lowPowerDevice
+            ? 42
+            : 54
+          : lowPowerDevice
+            ? 64
+            : 84;
+      const centerX = width * (mobile ? 0.57 : 0.74);
+      const centerY = height * (mobile ? 0.4 : 0.5);
+      const spreadX = width * (mobile ? 0.43 : 0.24);
+      const spreadY = height * (mobile ? 0.25 : 0.35);
 
       particles = Array.from({ length: count }, (_, index) => {
         const angle = Math.random() * Math.PI * 2;
-        const distance = Math.pow(Math.random(), 0.6);
+        const distance = Math.sqrt(Math.random());
+        const homeX =
+          centerX + Math.cos(angle) * spreadX * distance;
+        const homeY =
+          centerY + Math.sin(angle) * spreadY * distance;
+
         return {
-          x: centerX + Math.cos(angle) * spreadX * distance,
-          y: centerY + Math.sin(angle) * spreadY * distance,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          radius: index % 17 === 0 ? 4.2 : 1.15 + Math.random() * 1.45,
+          x: homeX,
+          y: homeY,
+          homeX,
+          homeY,
+          vx: (Math.random() - 0.5) * 0.16,
+          vy: (Math.random() - 0.5) * 0.16,
+          radius: index % 13 === 0 ? 3.15 : 1.2 + Math.random() * 1.05,
           phase: Math.random() * Math.PI * 2,
           color: COLORS[index % COLORS.length],
+          accent: index % 13 === 0,
         };
       });
+
+      const linkKeys = new Set<string>();
+      const nextLinks: Array<[number, number]> = [];
+
+      particles.forEach((particle, index) => {
+        const nearest = particles
+          .map((other, otherIndex) => ({
+            otherIndex,
+            distance:
+              (other.homeX - particle.homeX) ** 2 +
+              (other.homeY - particle.homeY) ** 2,
+          }))
+          .filter(({ otherIndex }) => otherIndex !== index)
+          .sort((a, b) => a.distance - b.distance)
+          .slice(0, index % 4 === 0 ? 2 : 1);
+
+        nearest.forEach(({ otherIndex, distance }) => {
+          if (distance > 170 ** 2) return;
+          const start = Math.min(index, otherIndex);
+          const end = Math.max(index, otherIndex);
+          const key = `${start}:${end}`;
+          if (linkKeys.has(key)) return;
+          linkKeys.add(key);
+          nextLinks.push([start, end]);
+        });
+      });
+
+      links = nextLinks;
     };
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
       width = bounds.width;
       height = bounds.height;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      mobile = width < 720;
+      const lowPowerDevice =
+        typeof navigator.hardwareConcurrency === "number" &&
+        navigator.hardwareConcurrency <= 4;
+      targetFrameLength = 1000 / (mobile || lowPowerDevice ? 45 : 60);
+      const dpr = Math.min(
+        window.devicePixelRatio || 1,
+        mobile ? 1.25 : 1.5,
+      );
+
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       createParticles();
     };
 
-    const draw = (time: number) => {
+    const render = (time: number, deltaScale: number) => {
       context.clearRect(0, 0, width, height);
-      context.globalCompositeOperation = "lighter";
+      context.globalCompositeOperation = "source-over";
 
-      for (let index = 0; index < particles.length; index += 1) {
-        const particle = particles[index];
-        const homeX =
-          width * (width < 720 ? 0.58 : 0.7) +
-          Math.cos(particle.phase + time * 0.00008) *
-            width *
-            (width < 720 ? 0.31 : 0.2);
-        const homeY =
-          height * (width < 720 ? 0.47 : 0.5) +
-          Math.sin(particle.phase * 1.7 + time * 0.00011) * height * 0.25;
-
+      particles.forEach((particle) => {
         if (!reducedMotion) {
-          particle.vx += (homeX - particle.x) * 0.000085;
-          particle.vy += (homeY - particle.y) * 0.000085;
+          const driftX = Math.cos(particle.phase + time * 0.00022) * 12;
+          const driftY =
+            Math.sin(particle.phase * 1.6 + time * 0.00018) * 10;
+          particle.vx +=
+            (particle.homeX + driftX - particle.x) * 0.0028 * deltaScale;
+          particle.vy +=
+            (particle.homeY + driftY - particle.y) * 0.0028 * deltaScale;
 
           if (pointer.active) {
             const dx = pointer.x - particle.x;
             const dy = pointer.y - particle.y;
-            const distance = Math.max(Math.sqrt(dx * dx + dy * dy), 18);
-            const burstStrength = Math.max(
-              pointer.burst,
-              pointer.pressed ? 1 : 0,
-            );
-            const influence = burstStrength > 0.02 ? 390 : 350;
+            const distance = Math.max(Math.hypot(dx, dy), 14);
+            const influence = pointer.burst > 0.02 ? 240 : 175;
+
             if (distance < influence) {
               const falloff = 1 - distance / influence;
               const force =
-                falloff *
-                falloff *
-                (burstStrength > 0.02 ? -1.18 * burstStrength : 0.25);
-              particle.vx += (dx / distance) * force;
-              particle.vy += (dy / distance) * force;
-              particle.vx += pointer.velocityX * falloff * 0.02;
-              particle.vy += pointer.velocityY * falloff * 0.02;
+                pointer.burst > 0.02
+                  ? -0.48 * pointer.burst * falloff
+                  : -0.075 * falloff;
+              particle.vx += (dx / distance) * force * deltaScale;
+              particle.vy += (dy / distance) * force * deltaScale;
+              particle.vx += pointer.velocityX * falloff * 0.006;
+              particle.vy += pointer.velocityY * falloff * 0.006;
             }
           }
 
-          const speed = Math.sqrt(
-            particle.vx * particle.vx + particle.vy * particle.vy,
-          );
-          if (speed > 6) {
-            particle.vx = (particle.vx / speed) * 6;
-            particle.vy = (particle.vy / speed) * 6;
+          const speed = Math.hypot(particle.vx, particle.vy);
+          if (speed > 3.2) {
+            particle.vx = (particle.vx / speed) * 3.2;
+            particle.vy = (particle.vy / speed) * 3.2;
           }
 
-          particle.vx *= 0.977;
-          particle.vy *= 0.977;
-          particle.x += particle.vx;
-          particle.y += particle.vy;
+          particle.vx *= Math.pow(0.94, deltaScale);
+          particle.vy *= Math.pow(0.94, deltaScale);
+          particle.x += particle.vx * deltaScale;
+          particle.y += particle.vy * deltaScale;
         }
+      });
 
+      links.forEach(([startIndex, endIndex]) => {
+        const start = particles[startIndex];
+        const end = particles[endIndex];
+        const distance = Math.hypot(end.x - start.x, end.y - start.y);
+        if (distance > 190) return;
+
+        context.beginPath();
+        context.moveTo(start.x, start.y);
+        context.lineTo(end.x, end.y);
+        context.strokeStyle = `rgba(217, 255, 67, ${
+          0.055 + 0.12 * (1 - distance / 190)
+        })`;
+        context.lineWidth = 0.8;
+        context.stroke();
+      });
+
+      if (pointer.active) {
+        const nearby = particles
+          .map((particle, index) => ({
+            index,
+            distance:
+              (particle.x - pointer.x) ** 2 +
+              (particle.y - pointer.y) ** 2,
+          }))
+          .filter(({ distance }) => distance < 190 ** 2)
+          .sort((a, b) => a.distance - b.distance)
+          .slice(0, 7);
+
+        nearby.forEach(({ index, distance }) => {
+          const particle = particles[index];
+          const normalizedDistance = Math.sqrt(distance) / 190;
+          context.beginPath();
+          context.moveTo(pointer.x, pointer.y);
+          context.lineTo(particle.x, particle.y);
+          context.strokeStyle = `rgba(182, 241, 223, ${
+            0.12 + 0.34 * (1 - normalizedDistance)
+          })`;
+          context.lineWidth = 0.9;
+          context.stroke();
+        });
+      }
+
+      particles.forEach((particle) => {
         const speed = Math.hypot(particle.vx, particle.vy);
-        if (speed > 0.28) {
+        if (speed > 0.75) {
           context.beginPath();
           context.moveTo(
-            particle.x - particle.vx * 5.5,
-            particle.y - particle.vy * 5.5,
+            particle.x - particle.vx * 3.2,
+            particle.y - particle.vy * 3.2,
           );
           context.lineTo(particle.x, particle.y);
-          context.strokeStyle = particle.color;
-          context.globalAlpha = Math.min(0.7, 0.16 + speed * 0.11);
-          context.lineWidth = Math.max(0.8, particle.radius * 0.55);
+          context.strokeStyle = "rgba(182, 241, 223, 0.22)";
+          context.lineWidth = 0.75;
           context.stroke();
         }
 
-        for (let otherIndex = index + 1; otherIndex < particles.length; otherIndex += 1) {
-          const other = particles[otherIndex];
-          const dx = other.x - particle.x;
-          const dy = other.y - particle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 108) {
-            context.beginPath();
-            context.moveTo(particle.x, particle.y);
-            context.lineTo(other.x, other.y);
-            context.strokeStyle = `rgba(217, 255, 67, ${
-              0.3 * (1 - distance / 108)
-            })`;
-            context.globalAlpha = 1;
-            context.lineWidth = 0.85;
-            context.stroke();
-          }
-        }
-
-        if (pointer.active) {
-          const pointerDistance = Math.hypot(
-            pointer.x - particle.x,
-            pointer.y - particle.y,
+        if (particle.accent) {
+          context.beginPath();
+          context.arc(
+            particle.x,
+            particle.y,
+            particle.radius + 4,
+            0,
+            Math.PI * 2,
           );
-          if (pointerDistance < 220) {
-            context.beginPath();
-            context.moveTo(pointer.x, pointer.y);
-            context.lineTo(particle.x, particle.y);
-            context.strokeStyle = `rgba(182, 241, 223, ${
-              0.5 * (1 - pointerDistance / 220)
-            })`;
-            context.globalAlpha = 1;
-            context.lineWidth = 1;
-            context.stroke();
-          }
+          context.fillStyle = "rgba(217, 255, 67, 0.1)";
+          context.fill();
         }
 
         context.beginPath();
-        context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        context.arc(
+          particle.x,
+          particle.y,
+          particle.radius,
+          0,
+          Math.PI * 2,
+        );
         context.fillStyle = particle.color;
-        context.globalAlpha = particle.radius > 3 ? 1 : 0.82;
-        context.shadowColor = particle.color;
-        context.shadowBlur = particle.radius > 3 ? 18 : 7;
+        context.globalAlpha = particle.accent ? 0.96 : 0.74;
         context.fill();
-        context.shadowBlur = 0;
-      }
+        context.globalAlpha = 1;
+      });
 
-      context.globalAlpha = 1;
       if (pointer.active) {
-        const haloRadius = pointer.burst > 0.02 ? 116 : 68;
-        const halo = context.createRadialGradient(
-          pointer.x,
-          pointer.y,
-          0,
-          pointer.x,
-          pointer.y,
-          haloRadius,
-        );
-        halo.addColorStop(
-          0,
-          pointer.burst > 0.02
-            ? `rgba(255, 127, 92, ${0.2 * pointer.burst})`
-            : "rgba(217, 255, 67, 0.055)",
-        );
-        halo.addColorStop(1, "rgba(217, 255, 67, 0)");
         context.beginPath();
-        context.arc(pointer.x, pointer.y, haloRadius, 0, Math.PI * 2);
-        context.fillStyle = halo;
-        context.fill();
-
-        context.beginPath();
-        context.arc(pointer.x, pointer.y, 10, 0, Math.PI * 2);
-        context.strokeStyle = "rgba(217, 255, 67, 0.32)";
+        context.arc(pointer.x, pointer.y, 17, 0, Math.PI * 2);
+        context.strokeStyle = "rgba(217, 255, 67, 0.42)";
         context.lineWidth = 1;
         context.stroke();
 
         if (pointer.burst > 0.02) {
-          const burstProgress = 1 - pointer.burst;
           context.beginPath();
           context.arc(
             pointer.x,
             pointer.y,
-            26 + burstProgress * 230,
+            28 + (1 - pointer.burst) * 112,
             0,
             Math.PI * 2,
           );
           context.strokeStyle = `rgba(255, 127, 92, ${
-            Math.min(0.76, pointer.burst * 0.9)
+            0.66 * pointer.burst
           })`;
-          context.lineWidth = 2;
+          context.lineWidth = 1.5;
           context.stroke();
         }
       }
+    };
 
-      pointer.velocityX *= 0.74;
-      pointer.velocityY *= 0.74;
-      pointer.burst *= 0.91;
-      if (!reducedMotion) frame = requestAnimationFrame(draw);
+    const draw = (time: number) => {
+      if (
+        reducedMotion ||
+        document.hidden ||
+        !canvasVisible
+      ) {
+        frame = 0;
+        return;
+      }
+
+      const elapsed = time - lastFrameTime;
+      if (elapsed < targetFrameLength) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
+
+      const deltaScale = Math.min(elapsed / (1000 / 60), 2);
+      lastFrameTime = time;
+      render(time, deltaScale);
+
+      pointer.velocityX *= 0.68;
+      pointer.velocityY *= 0.68;
+      pointer.burst *= 0.9;
+      frame = requestAnimationFrame(draw);
+    };
+
+    const startAnimation = () => {
+      if (
+        frame ||
+        reducedMotion ||
+        document.hidden ||
+        !canvasVisible
+      ) {
+        return;
+      }
+      lastFrameTime = performance.now();
+      frame = requestAnimationFrame(draw);
     };
 
     const updatePointer = (event: PointerEvent) => {
@@ -247,58 +337,78 @@ export function ParticleField() {
       const nextX = event.clientX - bounds.left;
       const nextY = event.clientY - bounds.top;
       const inside =
-        nextX >= 0 && nextX <= bounds.width && nextY >= 0 && nextY <= bounds.height;
+        nextX >= 0 &&
+        nextX <= bounds.width &&
+        nextY >= 0 &&
+        nextY <= bounds.height;
 
       if (inside) {
-        pointer.velocityX = nextX - pointer.x;
-        pointer.velocityY = nextY - pointer.y;
+        if (pointer.active) {
+          pointer.velocityX = nextX - pointer.x;
+          pointer.velocityY = nextY - pointer.y;
+        }
         pointer.x = nextX;
         pointer.y = nextY;
       }
       pointer.active = inside;
 
-      if (reducedMotion) draw(performance.now());
+      if (reducedMotion) render(performance.now(), 0);
     };
-    const leavePointer = () => {
-      pointer.active = false;
-      pointer.pressed = false;
-      if (reducedMotion) draw(performance.now());
-    };
+
     const pressPointer = (event: PointerEvent) => {
       updatePointer(event);
-      pointer.pressed = pointer.active;
       if (pointer.active) pointer.burst = 1;
     };
-    const releasePointer = () => {
-      pointer.pressed = false;
-      if (reducedMotion) draw(performance.now());
-    };
+
     const updateMotion = (event: MediaQueryListEvent) => {
       reducedMotion = event.matches;
       cancelAnimationFrame(frame);
+      frame = 0;
       createParticles();
-      draw(0);
+      render(0, 0);
+      startAnimation();
     };
 
+    const updateVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      } else {
+        startAnimation();
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        canvasVisible = entry.isIntersecting;
+        if (!canvasVisible) {
+          cancelAnimationFrame(frame);
+          frame = 0;
+        } else {
+          startAnimation();
+        }
+      },
+      { threshold: 0.02 },
+    );
+
     resize();
-    draw(0);
+    render(0, 0);
+    startAnimation();
+    observer.observe(canvas);
     window.addEventListener("resize", resize);
-    window.addEventListener("pointermove", updatePointer);
-    window.addEventListener("pointerdown", pressPointer);
-    window.addEventListener("pointerup", releasePointer);
-    window.addEventListener("pointercancel", releasePointer);
-    window.addEventListener("blur", leavePointer);
-    media.addEventListener("change", updateMotion);
+    window.addEventListener("pointermove", updatePointer, { passive: true });
+    window.addEventListener("pointerdown", pressPointer, { passive: true });
+    document.addEventListener("visibilitychange", updateVisibility);
+    motionPreference.addEventListener("change", updateMotion);
 
     return () => {
       cancelAnimationFrame(frame);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", updatePointer);
       window.removeEventListener("pointerdown", pressPointer);
-      window.removeEventListener("pointerup", releasePointer);
-      window.removeEventListener("pointercancel", releasePointer);
-      window.removeEventListener("blur", leavePointer);
-      media.removeEventListener("change", updateMotion);
+      document.removeEventListener("visibilitychange", updateVisibility);
+      motionPreference.removeEventListener("change", updateMotion);
     };
   }, []);
 
