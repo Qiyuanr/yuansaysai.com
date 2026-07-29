@@ -37,11 +37,12 @@ export function ParticleField() {
       velocityY: 0,
       active: false,
       pressed: false,
+      burst: 0,
     };
 
     const createParticles = () => {
       const mobile = width < 720;
-      const count = reducedMotion ? 36 : mobile ? 72 : 132;
+      const count = reducedMotion ? 54 : mobile ? 118 : 188;
       const centerX = width * (mobile ? 0.58 : 0.7);
       const centerY = height * (mobile ? 0.47 : 0.5);
       const spreadX = width * (mobile ? 0.44 : 0.29);
@@ -53,9 +54,9 @@ export function ParticleField() {
         return {
           x: centerX + Math.cos(angle) * spreadX * distance,
           y: centerY + Math.sin(angle) * spreadY * distance,
-          vx: (Math.random() - 0.5) * 0.22,
-          vy: (Math.random() - 0.5) * 0.22,
-          radius: index % 19 === 0 ? 2.8 : 0.7 + Math.random() * 1.2,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          radius: index % 17 === 0 ? 4.2 : 1.15 + Math.random() * 1.45,
           phase: Math.random() * Math.PI * 2,
           color: COLORS[index % COLORS.length],
         };
@@ -75,6 +76,7 @@ export function ParticleField() {
 
     const draw = (time: number) => {
       context.clearRect(0, 0, width, height);
+      context.globalCompositeOperation = "lighter";
 
       for (let index = 0; index < particles.length; index += 1) {
         const particle = particles[index];
@@ -95,15 +97,21 @@ export function ParticleField() {
             const dx = pointer.x - particle.x;
             const dy = pointer.y - particle.y;
             const distance = Math.max(Math.sqrt(dx * dx + dy * dy), 18);
-            const influence = pointer.pressed ? 330 : 280;
+            const burstStrength = Math.max(
+              pointer.burst,
+              pointer.pressed ? 1 : 0,
+            );
+            const influence = burstStrength > 0.02 ? 390 : 350;
             if (distance < influence) {
               const falloff = 1 - distance / influence;
               const force =
-                falloff * falloff * (pointer.pressed ? -0.78 : 0.14);
+                falloff *
+                falloff *
+                (burstStrength > 0.02 ? -1.18 * burstStrength : 0.25);
               particle.vx += (dx / distance) * force;
               particle.vy += (dy / distance) * force;
-              particle.vx += pointer.velocityX * falloff * 0.012;
-              particle.vy += pointer.velocityY * falloff * 0.012;
+              particle.vx += pointer.velocityX * falloff * 0.02;
+              particle.vy += pointer.velocityY * falloff * 0.02;
             }
           }
 
@@ -121,17 +129,34 @@ export function ParticleField() {
           particle.y += particle.vy;
         }
 
+        const speed = Math.hypot(particle.vx, particle.vy);
+        if (speed > 0.28) {
+          context.beginPath();
+          context.moveTo(
+            particle.x - particle.vx * 5.5,
+            particle.y - particle.vy * 5.5,
+          );
+          context.lineTo(particle.x, particle.y);
+          context.strokeStyle = particle.color;
+          context.globalAlpha = Math.min(0.7, 0.16 + speed * 0.11);
+          context.lineWidth = Math.max(0.8, particle.radius * 0.55);
+          context.stroke();
+        }
+
         for (let otherIndex = index + 1; otherIndex < particles.length; otherIndex += 1) {
           const other = particles[otherIndex];
           const dx = other.x - particle.x;
           const dy = other.y - particle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 82) {
+          if (distance < 108) {
             context.beginPath();
             context.moveTo(particle.x, particle.y);
             context.lineTo(other.x, other.y);
-            context.strokeStyle = `rgba(217, 255, 67, ${0.12 * (1 - distance / 82)})`;
-            context.lineWidth = 0.6;
+            context.strokeStyle = `rgba(217, 255, 67, ${
+              0.3 * (1 - distance / 108)
+            })`;
+            context.globalAlpha = 1;
+            context.lineWidth = 0.85;
             context.stroke();
           }
         }
@@ -141,14 +166,15 @@ export function ParticleField() {
             pointer.x - particle.x,
             pointer.y - particle.y,
           );
-          if (pointerDistance < 150) {
+          if (pointerDistance < 220) {
             context.beginPath();
             context.moveTo(pointer.x, pointer.y);
             context.lineTo(particle.x, particle.y);
             context.strokeStyle = `rgba(182, 241, 223, ${
-              0.16 * (1 - pointerDistance / 150)
+              0.5 * (1 - pointerDistance / 220)
             })`;
-            context.lineWidth = 0.7;
+            context.globalAlpha = 1;
+            context.lineWidth = 1;
             context.stroke();
           }
         }
@@ -156,13 +182,16 @@ export function ParticleField() {
         context.beginPath();
         context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
         context.fillStyle = particle.color;
-        context.globalAlpha = particle.radius > 2 ? 0.92 : 0.42;
+        context.globalAlpha = particle.radius > 3 ? 1 : 0.82;
+        context.shadowColor = particle.color;
+        context.shadowBlur = particle.radius > 3 ? 18 : 7;
         context.fill();
+        context.shadowBlur = 0;
       }
 
       context.globalAlpha = 1;
       if (pointer.active) {
-        const haloRadius = pointer.pressed ? 132 : 92;
+        const haloRadius = pointer.burst > 0.02 ? 116 : 68;
         const halo = context.createRadialGradient(
           pointer.x,
           pointer.y,
@@ -173,9 +202,9 @@ export function ParticleField() {
         );
         halo.addColorStop(
           0,
-          pointer.pressed
-            ? "rgba(255, 127, 92, 0.17)"
-            : "rgba(217, 255, 67, 0.12)",
+          pointer.burst > 0.02
+            ? `rgba(255, 127, 92, ${0.2 * pointer.burst})`
+            : "rgba(217, 255, 67, 0.055)",
         );
         halo.addColorStop(1, "rgba(217, 255, 67, 0)");
         context.beginPath();
@@ -184,22 +213,32 @@ export function ParticleField() {
         context.fill();
 
         context.beginPath();
-        context.arc(
-          pointer.x,
-          pointer.y,
-          pointer.pressed ? 28 : 18,
-          0,
-          Math.PI * 2,
-        );
-        context.strokeStyle = pointer.pressed
-          ? "rgba(255, 127, 92, 0.72)"
-          : "rgba(217, 255, 67, 0.55)";
+        context.arc(pointer.x, pointer.y, 10, 0, Math.PI * 2);
+        context.strokeStyle = "rgba(217, 255, 67, 0.32)";
         context.lineWidth = 1;
         context.stroke();
+
+        if (pointer.burst > 0.02) {
+          const burstProgress = 1 - pointer.burst;
+          context.beginPath();
+          context.arc(
+            pointer.x,
+            pointer.y,
+            26 + burstProgress * 230,
+            0,
+            Math.PI * 2,
+          );
+          context.strokeStyle = `rgba(255, 127, 92, ${
+            Math.min(0.76, pointer.burst * 0.9)
+          })`;
+          context.lineWidth = 2;
+          context.stroke();
+        }
       }
 
       pointer.velocityX *= 0.74;
       pointer.velocityY *= 0.74;
+      pointer.burst *= 0.91;
       if (!reducedMotion) frame = requestAnimationFrame(draw);
     };
 
@@ -228,6 +267,7 @@ export function ParticleField() {
     const pressPointer = (event: PointerEvent) => {
       updatePointer(event);
       pointer.pressed = pointer.active;
+      if (pointer.active) pointer.burst = 1;
     };
     const releasePointer = () => {
       pointer.pressed = false;
