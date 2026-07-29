@@ -148,34 +148,34 @@ export function ParticleField() {
           const driftY =
             Math.sin(particle.phase * 1.6 + time * 0.00018) * 10;
           particle.vx +=
-            (particle.homeX + driftX - particle.x) * 0.0028 * deltaScale;
+            (particle.homeX + driftX - particle.x) * 0.004 * deltaScale;
           particle.vy +=
-            (particle.homeY + driftY - particle.y) * 0.0028 * deltaScale;
+            (particle.homeY + driftY - particle.y) * 0.004 * deltaScale;
 
           if (pointer.active) {
             const dx = pointer.x - particle.x;
             const dy = pointer.y - particle.y;
             const distance = Math.max(Math.hypot(dx, dy), 14);
-            const influence = 175;
+            const influence = mobile ? 220 : 270;
 
             if (distance < influence) {
               const falloff = 1 - distance / influence;
-              const force = -0.075 * falloff;
+              const force = -0.46 * Math.pow(falloff, 1.25);
               particle.vx += (dx / distance) * force * deltaScale;
               particle.vy += (dy / distance) * force * deltaScale;
-              particle.vx += pointer.velocityX * falloff * 0.006;
-              particle.vy += pointer.velocityY * falloff * 0.006;
+              particle.vx += pointer.velocityX * falloff * 0.032;
+              particle.vy += pointer.velocityY * falloff * 0.032;
             }
           }
 
           const speed = Math.hypot(particle.vx, particle.vy);
-          if (speed > 3.2) {
-            particle.vx = (particle.vx / speed) * 3.2;
-            particle.vy = (particle.vy / speed) * 3.2;
+          if (speed > 5) {
+            particle.vx = (particle.vx / speed) * 5;
+            particle.vy = (particle.vy / speed) * 5;
           }
 
-          particle.vx *= Math.pow(0.94, deltaScale);
-          particle.vy *= Math.pow(0.94, deltaScale);
+          particle.vx *= Math.pow(0.91, deltaScale);
+          particle.vy *= Math.pow(0.91, deltaScale);
           particle.x += particle.vx * deltaScale;
           particle.y += particle.vy * deltaScale;
         }
@@ -207,13 +207,13 @@ export function ParticleField() {
               (particle.x - pointer.x) ** 2 +
               (particle.y - pointer.y) ** 2,
           }))
-          .filter(({ distance }) => distance < 190 ** 2)
+          .filter(({ distance }) => distance < 270 ** 2)
           .sort((a, b) => a.distance - b.distance)
-          .slice(0, 7);
+          .slice(0, 12);
 
         nearby.forEach(({ index, distance }) => {
           const particle = particles[index];
-          const normalizedDistance = Math.sqrt(distance) / 190;
+          const normalizedDistance = Math.sqrt(distance) / 270;
           context.beginPath();
           context.moveTo(pointer.x, pointer.y);
           context.lineTo(particle.x, particle.y);
@@ -227,15 +227,15 @@ export function ParticleField() {
 
       particles.forEach((particle) => {
         const speed = Math.hypot(particle.vx, particle.vy);
-        if (speed > 0.75) {
+        if (speed > 0.3) {
           context.beginPath();
           context.moveTo(
-            particle.x - particle.vx * 3.2,
-            particle.y - particle.vy * 3.2,
+            particle.x - particle.vx * 6,
+            particle.y - particle.vy * 6,
           );
           context.lineTo(particle.x, particle.y);
-          context.strokeStyle = "rgba(182, 241, 223, 0.22)";
-          context.lineWidth = 0.75;
+          context.strokeStyle = "rgba(182, 241, 223, 0.42)";
+          context.lineWidth = 0.95;
           context.stroke();
         }
 
