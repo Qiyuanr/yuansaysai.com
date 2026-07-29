@@ -59,13 +59,13 @@ export function ParticleField() {
         : mobile
           ? lowPowerDevice
             ? 42
-            : 54
+            : 56
           : lowPowerDevice
-            ? 64
-            : 84;
-      const centerX = width * (mobile ? 0.57 : 0.74);
+            ? 68
+            : 92;
+      const centerX = width * (mobile ? 0.53 : 0.68);
       const centerY = height * (mobile ? 0.4 : 0.5);
-      const spreadX = width * (mobile ? 0.43 : 0.24);
+      const spreadX = width * (mobile ? 0.44 : 0.34);
       const spreadY = height * (mobile ? 0.25 : 0.35);
 
       particles = Array.from({ length: count }, (_, index) => {
@@ -268,28 +268,20 @@ export function ParticleField() {
         context.globalAlpha = 1;
       });
 
-      if (pointer.active) {
+      if (pointer.active && pointer.burst > 0.02) {
         context.beginPath();
-        context.arc(pointer.x, pointer.y, 17, 0, Math.PI * 2);
-        context.strokeStyle = "rgba(217, 255, 67, 0.42)";
-        context.lineWidth = 1;
+        context.arc(
+          pointer.x,
+          pointer.y,
+          28 + (1 - pointer.burst) * 112,
+          0,
+          Math.PI * 2,
+        );
+        context.strokeStyle = `rgba(255, 127, 92, ${
+          0.66 * pointer.burst
+        })`;
+        context.lineWidth = 1.5;
         context.stroke();
-
-        if (pointer.burst > 0.02) {
-          context.beginPath();
-          context.arc(
-            pointer.x,
-            pointer.y,
-            28 + (1 - pointer.burst) * 112,
-            0,
-            Math.PI * 2,
-          );
-          context.strokeStyle = `rgba(255, 127, 92, ${
-            0.66 * pointer.burst
-          })`;
-          context.lineWidth = 1.5;
-          context.stroke();
-        }
       }
     };
 
