@@ -30,7 +30,7 @@ export function ParticleField() {
     let height = 0;
     let frame = 0;
     let particles: Particle[] = [];
-    let pointer = { x: 0, y: 0, active: false, pressed: false };
+    const pointer = { x: 0, y: 0, active: false, pressed: false };
 
     const createParticles = () => {
       const mobile = width < 720;
