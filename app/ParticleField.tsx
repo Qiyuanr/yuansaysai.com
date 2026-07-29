@@ -306,26 +306,6 @@ export function ParticleField() {
         context.globalAlpha = 1;
       });
 
-      if (pointer.active && pointer.burst > 0.02) {
-        const progress = 1 - pointer.burst;
-        const waveRadius = 24 + progress * (mobile ? 210 : 280);
-
-        context.beginPath();
-        context.arc(pointer.x, pointer.y, waveRadius, 0, Math.PI * 2);
-        context.strokeStyle = `rgba(255, 127, 92, ${
-          0.58 * pointer.burst
-        })`;
-        context.lineWidth = 1.6;
-        context.stroke();
-
-        context.beginPath();
-        context.arc(pointer.x, pointer.y, waveRadius + 7, 0, Math.PI * 2);
-        context.strokeStyle = `rgba(182, 241, 223, ${
-          0.16 * pointer.burst
-        })`;
-        context.lineWidth = 0.8;
-        context.stroke();
-      }
     };
 
     const draw = (time: number) => {
