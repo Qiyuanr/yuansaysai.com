@@ -7,6 +7,7 @@ const notes = [
     description:
       "先说清楚你要什么、给谁用、什么算做好。三个问题，比套万能模板更有用。",
     meta: "教程 / 5 min",
+    href: "/notes/prompt-basics",
   },
   {
     index: "02",
@@ -14,6 +15,7 @@ const notes = [
     description:
       "从补上下文、拆小任务到要求自检，逐步找到模型跑偏的原因。",
     meta: "急诊 / 6 min",
+    href: "/notes/ai-off-topic",
   },
   {
     index: "03",
@@ -21,6 +23,7 @@ const notes = [
     description:
       "总结资料、整理思路、改写表达、分析表格、生成初稿，从每天都用得上的地方开始。",
     meta: "清单 / 7 min",
+    href: "/notes/five-ai-functions",
   },
 ];
 
@@ -69,9 +72,9 @@ export default function Home() {
             AI remedies for everyday people
           </p>
           <h1>
-            让普通人，
+            让 AI，
             <br />
-            <span>也能用懂 AI。</span>
+            <span>成为每个人的能力。</span>
           </h1>
           <p className="hero-intro">
             这里是予安的 AI 偏方：分享真正好用的 AI 功能、看得懂的使用教程，
@@ -108,13 +111,13 @@ export default function Home() {
 
       <section className="notes section-shell" id="notes">
         <div className="section-heading">
-          <p className="section-kicker">AI CLINIC / 疑难杂症</p>
-          <h2>先把问题治好</h2>
-          <p>从真实卡点出发的教程与解法。</p>
+          <p className="section-kicker">AI CLINIC / 对症下方</p>
+          <h2>从问题出发</h2>
+          <p>把每个卡点拆成看得懂、做得到的解决步骤。</p>
         </div>
         <div className="notes-list">
           {notes.map((note) => (
-            <article className="note-card" key={note.index}>
+            <a className="note-card" href={note.href} key={note.index}>
               <span className="note-index">{note.index}</span>
               <div>
                 <h3>{note.title}</h3>
@@ -126,7 +129,7 @@ export default function Home() {
                   ↗
                 </span>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </section>

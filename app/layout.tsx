@@ -35,10 +35,10 @@ export const metadata: Metadata = {
     siteName: title,
     images: [
       {
-        url: "/og-yuans-ai-remedies.png",
+        url: "/og-yuans-ai-remedies-v2.png",
         width: 1732,
         height: 907,
-        alt: "予安的 AI 偏方 — 让普通人也能用懂 AI",
+        alt: "予安的 AI 偏方 — 让 AI 成为每个人的能力",
       },
     ],
   },
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og-yuans-ai-remedies.png"],
+    images: ["/og-yuans-ai-remedies-v2.png"],
   },
   robots: {
     index: true,
