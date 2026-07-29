@@ -30,7 +30,14 @@ export function ParticleField() {
     let height = 0;
     let frame = 0;
     let particles: Particle[] = [];
-    const pointer = { x: 0, y: 0, active: false, pressed: false };
+    const pointer = {
+      x: 0,
+      y: 0,
+      velocityX: 0,
+      velocityY: 0,
+      active: false,
+      pressed: false,
+    };
 
     const createParticles = () => {
       const mobile = width < 720;
@@ -81,22 +88,35 @@ export function ParticleField() {
           Math.sin(particle.phase * 1.7 + time * 0.00011) * height * 0.25;
 
         if (!reducedMotion) {
-          particle.vx += (homeX - particle.x) * 0.00006;
-          particle.vy += (homeY - particle.y) * 0.00006;
+          particle.vx += (homeX - particle.x) * 0.000085;
+          particle.vy += (homeY - particle.y) * 0.000085;
 
           if (pointer.active) {
             const dx = pointer.x - particle.x;
             const dy = pointer.y - particle.y;
-            const distance = Math.max(Math.sqrt(dx * dx + dy * dy), 24);
-            if (distance < 210) {
-              const force = (1 - distance / 210) * (pointer.pressed ? -0.18 : 0.055);
+            const distance = Math.max(Math.sqrt(dx * dx + dy * dy), 18);
+            const influence = pointer.pressed ? 330 : 280;
+            if (distance < influence) {
+              const falloff = 1 - distance / influence;
+              const force =
+                falloff * falloff * (pointer.pressed ? -0.78 : 0.14);
               particle.vx += (dx / distance) * force;
               particle.vy += (dy / distance) * force;
+              particle.vx += pointer.velocityX * falloff * 0.012;
+              particle.vy += pointer.velocityY * falloff * 0.012;
             }
           }
 
-          particle.vx *= 0.985;
-          particle.vy *= 0.985;
+          const speed = Math.sqrt(
+            particle.vx * particle.vx + particle.vy * particle.vy,
+          );
+          if (speed > 6) {
+            particle.vx = (particle.vx / speed) * 6;
+            particle.vy = (particle.vy / speed) * 6;
+          }
+
+          particle.vx *= 0.977;
+          particle.vy *= 0.977;
           particle.x += particle.vx;
           particle.y += particle.vy;
         }
@@ -110,8 +130,25 @@ export function ParticleField() {
             context.beginPath();
             context.moveTo(particle.x, particle.y);
             context.lineTo(other.x, other.y);
-            context.strokeStyle = `rgba(217, 255, 67, ${0.085 * (1 - distance / 82)})`;
+            context.strokeStyle = `rgba(217, 255, 67, ${0.12 * (1 - distance / 82)})`;
             context.lineWidth = 0.6;
+            context.stroke();
+          }
+        }
+
+        if (pointer.active) {
+          const pointerDistance = Math.hypot(
+            pointer.x - particle.x,
+            pointer.y - particle.y,
+          );
+          if (pointerDistance < 150) {
+            context.beginPath();
+            context.moveTo(pointer.x, pointer.y);
+            context.lineTo(particle.x, particle.y);
+            context.strokeStyle = `rgba(182, 241, 223, ${
+              0.16 * (1 - pointerDistance / 150)
+            })`;
+            context.lineWidth = 0.7;
             context.stroke();
           }
         }
@@ -124,25 +161,77 @@ export function ParticleField() {
       }
 
       context.globalAlpha = 1;
+      if (pointer.active) {
+        const haloRadius = pointer.pressed ? 132 : 92;
+        const halo = context.createRadialGradient(
+          pointer.x,
+          pointer.y,
+          0,
+          pointer.x,
+          pointer.y,
+          haloRadius,
+        );
+        halo.addColorStop(
+          0,
+          pointer.pressed
+            ? "rgba(255, 127, 92, 0.17)"
+            : "rgba(217, 255, 67, 0.12)",
+        );
+        halo.addColorStop(1, "rgba(217, 255, 67, 0)");
+        context.beginPath();
+        context.arc(pointer.x, pointer.y, haloRadius, 0, Math.PI * 2);
+        context.fillStyle = halo;
+        context.fill();
+
+        context.beginPath();
+        context.arc(
+          pointer.x,
+          pointer.y,
+          pointer.pressed ? 28 : 18,
+          0,
+          Math.PI * 2,
+        );
+        context.strokeStyle = pointer.pressed
+          ? "rgba(255, 127, 92, 0.72)"
+          : "rgba(217, 255, 67, 0.55)";
+        context.lineWidth = 1;
+        context.stroke();
+      }
+
+      pointer.velocityX *= 0.74;
+      pointer.velocityY *= 0.74;
       if (!reducedMotion) frame = requestAnimationFrame(draw);
     };
 
     const updatePointer = (event: PointerEvent) => {
       const bounds = canvas.getBoundingClientRect();
-      pointer.x = event.clientX - bounds.left;
-      pointer.y = event.clientY - bounds.top;
-      pointer.active = true;
+      const nextX = event.clientX - bounds.left;
+      const nextY = event.clientY - bounds.top;
+      const inside =
+        nextX >= 0 && nextX <= bounds.width && nextY >= 0 && nextY <= bounds.height;
+
+      if (inside) {
+        pointer.velocityX = nextX - pointer.x;
+        pointer.velocityY = nextY - pointer.y;
+        pointer.x = nextX;
+        pointer.y = nextY;
+      }
+      pointer.active = inside;
+
+      if (reducedMotion) draw(performance.now());
     };
     const leavePointer = () => {
       pointer.active = false;
       pointer.pressed = false;
+      if (reducedMotion) draw(performance.now());
     };
     const pressPointer = (event: PointerEvent) => {
       updatePointer(event);
-      pointer.pressed = true;
+      pointer.pressed = pointer.active;
     };
     const releasePointer = () => {
       pointer.pressed = false;
+      if (reducedMotion) draw(performance.now());
     };
     const updateMotion = (event: MediaQueryListEvent) => {
       reducedMotion = event.matches;
@@ -154,19 +243,21 @@ export function ParticleField() {
     resize();
     draw(0);
     window.addEventListener("resize", resize);
-    canvas.addEventListener("pointermove", updatePointer);
-    canvas.addEventListener("pointerleave", leavePointer);
-    canvas.addEventListener("pointerdown", pressPointer);
+    window.addEventListener("pointermove", updatePointer);
+    window.addEventListener("pointerdown", pressPointer);
     window.addEventListener("pointerup", releasePointer);
+    window.addEventListener("pointercancel", releasePointer);
+    window.addEventListener("blur", leavePointer);
     media.addEventListener("change", updateMotion);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
-      canvas.removeEventListener("pointermove", updatePointer);
-      canvas.removeEventListener("pointerleave", leavePointer);
-      canvas.removeEventListener("pointerdown", pressPointer);
+      window.removeEventListener("pointermove", updatePointer);
+      window.removeEventListener("pointerdown", pressPointer);
       window.removeEventListener("pointerup", releasePointer);
+      window.removeEventListener("pointercancel", releasePointer);
+      window.removeEventListener("blur", leavePointer);
       media.removeEventListener("change", updateMotion);
     };
   }, []);
@@ -175,8 +266,7 @@ export function ParticleField() {
     <canvas
       className="particle-field"
       ref={canvasRef}
-      aria-label="可交互的粒子星云：移动或按下指针可以改变粒子运动"
-      role="img"
+      aria-hidden="true"
     />
   );
 }
