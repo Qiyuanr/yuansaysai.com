@@ -3,48 +3,60 @@ import { ParticleField } from "./ParticleField";
 const notes = [
   {
     index: "01",
-    title: "AI 不是答案，是新的提问方式",
+    title: "不会写提示词？先别背公式",
     description:
-      "当模型能力快速增长，真正稀缺的不是更多输出，而是把模糊问题变清楚的判断力。",
-    meta: "思考 / 6 min",
+      "先说清楚你要什么、给谁用、什么算做好。三个问题，比套万能模板更有用。",
+    meta: "教程 / 5 min",
   },
   {
     index: "02",
-    title: "一人公司的产品实验",
+    title: "AI 总是答非所问，怎么治",
     description:
-      "用小团队的方法做个人项目：更短的反馈回路、更少的依赖，以及真正属于自己的节奏。",
-    meta: "实践 / 8 min",
+      "从补上下文、拆小任务到要求自检，逐步找到模型跑偏的原因。",
+    meta: "急诊 / 6 min",
   },
   {
     index: "03",
-    title: "保持人的手感",
+    title: "普通人最值得先学的 5 个 AI 功能",
     description:
-      "效率工具越来越聪明之后，品味、好奇心和对细节的感知反而变得更重要。",
-    meta: "随笔 / 4 min",
+      "总结资料、整理思路、改写表达、分析表格、生成初稿，从每天都用得上的地方开始。",
+    meta: "清单 / 7 min",
   },
 ];
 
 const experiments = [
-  ["01", "AI 工作流", "把重复劳动交给机器，把注意力留给判断。"],
-  ["02", "独立产品", "从一个真实的小问题开始，快速做出可用版本。"],
-  ["03", "公开写作", "记录尚未成熟的想法，也记录它们如何变化。"],
+  [
+    "01",
+    "读懂复杂内容",
+    "上传一篇长文或一份报告，让 AI 先讲重点，再解释你没看懂的部分。",
+  ],
+  [
+    "02",
+    "把想法变清楚",
+    "把零散念头交给 AI 整理成大纲、计划或一段能直接使用的表达。",
+  ],
+  [
+    "03",
+    "解决具体问题",
+    "遇到报错、不会设置或工具选不对时，用排查步骤一步步找到原因。",
+  ],
 ];
 
 export default function Home() {
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Yuan Says AI 首页">
+        <a className="brand" href="#top" aria-label="予安的 AI 偏方首页">
           <span className="brand-mark">Y</span>
-          <span>YUAN SAYS AI</span>
+          <span>予安的 AI 偏方</span>
         </a>
         <nav aria-label="主导航">
-          <a href="#notes">笔记</a>
-          <a href="#experiments">实验</a>
+          <a href="#notes">教程</a>
+          <a href="#experiments">功能</a>
           <a href="#about">关于</a>
         </nav>
         <a className="header-cta" href="mailto:hi@yuansaysai.com">
-          联系我 <span aria-hidden="true">↗</span>
+          有问题？ <span aria-hidden="true">↗</span>
         </a>
       </header>
 
@@ -54,51 +66,51 @@ export default function Home() {
         <div className="hero-copy">
           <p className="eyebrow">
             <span className="status-dot" />
-            Exploring intelligence &amp; making
+            AI remedies for everyday people
           </p>
           <h1>
-            把复杂的未来，
+            让普通人，
             <br />
-            <span>说得简单一点。</span>
+            <span>也能用懂 AI。</span>
           </h1>
           <p className="hero-intro">
-            我是 Yuan。这里记录我对 AI、产品与独立创造的观察——
+            这里是予安的 AI 偏方：分享真正好用的 AI 功能、看得懂的使用教程，
             <br className="desktop-break" />
-            不是预测未来，而是亲手做几个版本看看。
+            也专治提示词失灵、工具不会选、结果不靠谱等疑难杂症。
           </p>
           <div className="hero-actions">
             <a className="button button-primary" href="#notes">
-              阅读最新笔记 <span aria-hidden="true">↓</span>
+              从教程开始 <span aria-hidden="true">↓</span>
             </a>
-            <a className="button button-quiet" href="#about">
-              认识我
+            <a className="button button-quiet" href="#experiments">
+              查看 AI 工具箱
             </a>
           </div>
         </div>
 
         <div className="interaction-hint" aria-hidden="true">
           <span className="mouse-icon" />
-          移动光标，扰动想法
+          移动光标，吸附灵感；点击，打散重来
         </div>
         <div className="hero-number" aria-hidden="true">
-          Y / 01
+          AI / 01
         </div>
       </section>
 
       <section className="manifesto" aria-label="宣言">
         <p>
-          Technology moves fast.
+          AI should feel useful.
           <br />
-          <em>Clarity</em> moves us forward.
+          <em>Not intimidating.</em>
         </p>
-        <span>技术不断向前，清晰让我们真正前进。</span>
+        <span>AI 不该让人焦虑，它应该帮普通人解决问题。</span>
       </section>
 
       <section className="notes section-shell" id="notes">
         <div className="section-heading">
-          <p className="section-kicker">FIELD NOTES / 思考现场</p>
-          <h2>最近在想</h2>
-          <p>一些仍在生长中的答案。</p>
+          <p className="section-kicker">AI CLINIC / 疑难杂症</p>
+          <h2>先把问题治好</h2>
+          <p>从真实卡点出发的教程与解法。</p>
         </div>
         <div className="notes-list">
           {notes.map((note) => (
@@ -121,11 +133,11 @@ export default function Home() {
 
       <section className="experiments section-shell" id="experiments">
         <div className="section-heading experiment-heading">
-          <p className="section-kicker">CURRENTLY / 正在发生</p>
+          <p className="section-kicker">TOOLBOX / 好用功能</p>
           <h2>
-            先做起来，
+            不追热点，
             <br />
-            再慢慢想明白。
+            只分享真正有用的 AI。
           </h2>
         </div>
         <div className="experiment-grid">
@@ -146,16 +158,18 @@ export default function Home() {
         <p className="section-kicker">ABOUT / 关于</p>
         <div className="about-grid">
           <h2>
-            好奇心是我的
+            不卖焦虑，
             <br />
-            <span>长期主义。</span>
+            <span>只讲人话。</span>
           </h2>
           <div className="about-copy">
             <p>
-              我关注人如何与新技术一起工作，也喜欢把抽象的想法变成能被触摸、使用和讨论的东西。
+              我是予安。我会把自己真正用过、验证过的 AI
+              方法，拆成普通人看得懂、跟着能做的步骤。
             </p>
             <p>
-              这个网站是一间开放的数字工作室：放笔记、放实验，也放那些还没有名字的念头。
+              这里不堆术语，也不追每一个新模型。只分享好用功能、AI
+              使用教程，以及使用过程中那些常见却没人讲清楚的疑难杂症。
             </p>
             <a href="mailto:hi@yuansaysai.com">
               hi@yuansaysai.com <span aria-hidden="true">↗</span>
@@ -167,11 +181,11 @@ export default function Home() {
       <footer>
         <a className="brand footer-brand" href="#top">
           <span className="brand-mark">Y</span>
-          <span>YUAN SAYS AI</span>
+          <span>予安的 AI 偏方</span>
         </a>
-        <p>Ideas, tools, and a little bit of wonder.</p>
+        <p>Useful AI, explained simply.</p>
         <div>
-          <span>© {new Date().getFullYear()} Yuan</span>
+          <span>© {new Date().getFullYear()} 予安</span>
           <a href="#top">回到顶部 ↑</a>
         </div>
       </footer>

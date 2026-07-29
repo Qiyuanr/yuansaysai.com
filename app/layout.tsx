@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const title = "Yuan Says AI";
-const description = "Yuan 关于 AI、产品与独立创造的个人笔记与实验。";
+const title = "予安的 AI 偏方";
+const description =
+  "面向普通人的 AI 使用指南：分享好用的 AI 功能、看得懂的教程，以及 AI 使用过程中的疑难杂症解法。";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yuansaysai.com"),
@@ -11,8 +12,15 @@ export const metadata: Metadata = {
     template: `%s · ${title}`,
   },
   description,
-  keywords: ["AI", "人工智能", "产品", "独立创造", "个人博客"],
-  authors: [{ name: "Yuan" }],
+  keywords: [
+    "AI 教程",
+    "AI 工具",
+    "人工智能",
+    "提示词",
+    "AI 使用技巧",
+    "AI 疑难解答",
+  ],
+  authors: [{ name: "予安" }],
   alternates: { canonical: "/" },
   icons: {
     icon: "/favicon.svg",
@@ -27,10 +35,10 @@ export const metadata: Metadata = {
     siteName: title,
     images: [
       {
-        url: "/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Yuan Says AI — 把复杂的未来，说得简单一点。",
+        url: "/og-yuans-ai-remedies.png",
+        width: 1732,
+        height: 907,
+        alt: "予安的 AI 偏方 — 让普通人也能用懂 AI",
       },
     ],
   },
@@ -38,7 +46,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og.png"],
+    images: ["/og-yuans-ai-remedies.png"],
   },
   robots: {
     index: true,
