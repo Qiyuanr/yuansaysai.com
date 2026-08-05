@@ -3,6 +3,7 @@ import { ParticleField } from "./ParticleField";
 const notes = [
   {
     index: "01",
+    column: "ai-basics",
     title: "不会写提示词？先别背公式",
     description:
       "先说清楚你要什么、给谁用、什么算做好。三个问题，比套万能模板更有用。",
@@ -11,6 +12,7 @@ const notes = [
   },
   {
     index: "02",
+    column: "ai-basics",
     title: "AI 总是答非所问，怎么治",
     description:
       "从补上下文、拆小任务到要求自检，逐步找到模型跑偏的原因。",
@@ -19,6 +21,7 @@ const notes = [
   },
   {
     index: "03",
+    column: "ai-basics",
     title: "普通人最值得先学的 5 个 AI 功能",
     description:
       "总结资料、整理思路、改写表达、分析表格、生成初稿，从每天都用得上的地方开始。",
@@ -27,6 +30,7 @@ const notes = [
   },
   {
     index: "04",
+    column: "knowledge-workflows",
     title: "Obsidian + AI：把本地笔记库变成可调用的知识库",
     description:
       "从本地 Markdown 笔记、基础插件到 AI 接入和跨设备同步，搭一套可持续维护的知识库。",
@@ -35,6 +39,7 @@ const notes = [
   },
   {
     index: "05",
+    column: "ai-creation",
     title: "个人 IP 插图工作流：先固定人物，再建立画风",
     description:
       "用两层参考资料让 AI 保持人物一致，并让配图真正服务于文章观点。",
@@ -43,6 +48,7 @@ const notes = [
   },
   {
     index: "06",
+    column: "product-development",
     title: "Vibe Coding 视觉词典：滚动、反馈、风格与高级效果",
     description:
       "把模糊的“高级感”拆成可描述的网页行为、视觉语言和可复制提示词。",
@@ -51,6 +57,7 @@ const notes = [
   },
   {
     index: "07",
+    column: "product-development",
     title: "FDE 是什么：把 AI 工具接到真实业务流程",
     description:
       "从业务观察、最小 Demo 到上线交付，理解前置部署工程师如何解决企业 AI 落地问题。",
@@ -59,6 +66,7 @@ const notes = [
   },
   {
     index: "08",
+    column: "ai-creation",
     title: "视频制作 Skills 资源清单：先确认仓库、许可和可运行性",
     description:
       "整理一批视频制作相关的开源 Skill 入口，使用前先检查 README、许可证、依赖和输出质量。",
@@ -67,6 +75,7 @@ const notes = [
   },
   {
     index: "09",
+    column: "content-operations",
     title: "把小红书和抖音选题监控做成可复盘的工作流",
     description:
       "从关键词、对标账号到去重、评分和人工反馈，把重复刷平台变成可运行的内容监控系统。",
@@ -75,6 +84,7 @@ const notes = [
   },
   {
     index: "10",
+    column: "product-development",
     title: "GitHub 从零入门：把代码保存、同步和协作起来",
     description:
       "理解 Git 与 GitHub 的区别，完成仓库、分支、提交、推送和 Pull Request 的基本操作。",
@@ -82,6 +92,47 @@ const notes = [
     href: "/notes/github-zero-to-one",
   },
 ];
+
+const columns = [
+  {
+    id: "ai-basics",
+    number: "01",
+    english: "FOUNDATIONS",
+    title: "AI 基础",
+    description: "先把 AI 用顺：提示词、沟通方式和每天都能用上的基础功能。",
+  },
+  {
+    id: "knowledge-workflows",
+    number: "02",
+    english: "KNOWLEDGE",
+    title: "知识与工作流",
+    description: "把零散信息沉淀成自己的知识库，再接入可以调用它的 AI 工作流。",
+  },
+  {
+    id: "ai-creation",
+    number: "03",
+    english: "CREATION",
+    title: "AI 创作",
+    description: "从视觉、视频到表达，把创意拆成可复用、可检查的制作步骤。",
+  },
+  {
+    id: "product-development",
+    number: "04",
+    english: "BUILD",
+    title: "产品与开发",
+    description: "理解网页、代码和 AI 落地，做出能运行、能协作、能交付的东西。",
+  },
+  {
+    id: "content-operations",
+    number: "05",
+    english: "OPERATIONS",
+    title: "内容运营",
+    description: "把选题发现、平台观察和复盘反馈变成一套可持续的内容系统。",
+  },
+].map((column) => ({
+  ...column,
+  notes: notes.filter((note) => note.column === column.id),
+}));
 
 const experiments = [
   [
@@ -110,7 +161,7 @@ export default function Home() {
           <span>予安的 AI 偏方</span>
         </a>
         <nav aria-label="主导航">
-          <a href="#notes">教程</a>
+          <a href="#notes">专栏</a>
           <a href="#experiments">功能</a>
           <a href="#about">关于</a>
         </nav>
@@ -167,25 +218,54 @@ export default function Home() {
 
       <section className="notes section-shell" id="notes">
         <div className="section-heading">
-          <p className="section-kicker">AI CLINIC / 对症下方</p>
+          <p className="section-kicker">COLUMNS / 按主题阅读</p>
           <h2>从问题出发</h2>
-          <p>把每个卡点拆成看得懂、做得到的解决步骤。</p>
+          <p>把文章分成五个专栏，按你现在要解决的问题开始阅读。</p>
         </div>
-        <div className="notes-list">
-          {notes.map((note) => (
-            <a className="note-card" href={note.href} key={note.index}>
-              <span className="note-index">{note.index}</span>
-              <div>
-                <h3>{note.title}</h3>
-                <p>{note.description}</p>
-              </div>
-              <div className="note-meta">
-                <span>{note.meta}</span>
-                <span className="round-arrow" aria-hidden="true">
-                  ↗
-                </span>
-              </div>
+        <nav className="column-nav" aria-label="文章专栏">
+          {columns.map((column) => (
+            <a className="column-chip" href={`#column-${column.id}`} key={column.id}>
+              <span className="column-chip-index">{column.number}</span>
+              <strong>{column.title}</strong>
+              <span className="column-chip-count">{column.notes.length} 篇</span>
             </a>
+          ))}
+        </nav>
+        <div className="column-stack">
+          {columns.map((column) => (
+            <section
+              className="column-section"
+              id={`column-${column.id}`}
+              key={column.id}
+              aria-labelledby={`column-title-${column.id}`}
+            >
+              <div className="column-section-heading">
+                <div>
+                  <p className="column-section-kicker">
+                    {column.number} / {column.english}
+                  </p>
+                  <h3 id={`column-title-${column.id}`}>{column.title}</h3>
+                </div>
+                <p>{column.description}</p>
+              </div>
+              <div className="notes-list">
+                {column.notes.map((note) => (
+                  <a className="note-card" href={note.href} key={note.index}>
+                    <span className="note-index">{note.index}</span>
+                    <div>
+                      <h4>{note.title}</h4>
+                      <p>{note.description}</p>
+                    </div>
+                    <div className="note-meta">
+                      <span>{note.meta}</span>
+                      <span className="round-arrow" aria-hidden="true">
+                        ↗
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       </section>

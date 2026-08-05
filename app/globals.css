@@ -360,6 +360,99 @@ a {
   font-size: 14px;
 }
 
+.column-nav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  margin-bottom: 88px;
+  padding: 1px;
+  background: var(--line);
+}
+
+.column-chip {
+  min-height: 118px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 18px;
+  background: #111313;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.column-chip:hover {
+  background: var(--acid);
+  color: var(--ink);
+  transform: translateY(-4px);
+}
+
+.column-chip-index,
+.column-chip-count,
+.column-section-kicker {
+  color: rgba(242, 239, 232, 0.42);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.column-chip:hover .column-chip-index,
+.column-chip:hover .column-chip-count {
+  color: rgba(12, 13, 13, 0.58);
+}
+
+.column-chip strong {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.column-chip-count {
+  align-self: flex-end;
+}
+
+.column-stack {
+  display: grid;
+  gap: 96px;
+}
+
+.column-section {
+  scroll-margin-top: 36px;
+}
+
+.column-section-heading {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 30px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.column-section-kicker {
+  margin: 0 0 13px;
+  color: var(--acid);
+}
+
+.column-section-heading h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: clamp(36px, 4vw, 58px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.column-section-heading > p {
+  max-width: 500px;
+  justify-self: end;
+  margin: 0;
+  color: rgba(242, 239, 232, 0.55);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
 .notes-list {
   border-top: 1px solid var(--line);
 }
@@ -392,7 +485,8 @@ a {
   font-size: 11px;
 }
 
-.note-card h3 {
+.note-card h3,
+.note-card h4 {
   margin: 0 0 9px;
   font-size: clamp(22px, 2.3vw, 34px);
   font-weight: 500;
@@ -978,8 +1072,17 @@ footer > div {
   }
 
   .section-heading,
-  .about-grid {
+  .about-grid,
+  .column-section-heading {
     grid-template-columns: 1fr;
+  }
+
+  .column-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .column-section-heading > p {
+    justify-self: start;
   }
 
   .section-heading > p:last-child {
@@ -1072,6 +1175,24 @@ footer > div {
 
   .section-heading {
     padding-bottom: 35px;
+  }
+
+  .column-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 64px;
+  }
+
+  .column-chip {
+    min-height: 104px;
+    padding: 15px;
+  }
+
+  .column-stack {
+    gap: 64px;
+  }
+
+  .column-section-heading {
+    gap: 18px;
   }
 
   .note-card {
