@@ -25,6 +25,62 @@ const notes = [
     meta: "清单 / 7 min",
     href: "/notes/five-ai-functions",
   },
+  {
+    index: "04",
+    title: "Obsidian + AI：把本地笔记库变成可调用的知识库",
+    description:
+      "从本地 Markdown 笔记、基础插件到 AI 接入和跨设备同步，搭一套可持续维护的知识库。",
+    meta: "工作流 / 10 min",
+    href: "/notes/obsidian-ai-workflow",
+  },
+  {
+    index: "05",
+    title: "个人 IP 插图工作流：先固定人物，再建立画风",
+    description:
+      "用两层参考资料让 AI 保持人物一致，并让配图真正服务于文章观点。",
+    meta: "视觉工作流 / 8 min",
+    href: "/notes/ip-illustration-skills",
+  },
+  {
+    index: "06",
+    title: "Vibe Coding 视觉词典：滚动、反馈、风格与高级效果",
+    description:
+      "把模糊的“高级感”拆成可描述的网页行为、视觉语言和可复制提示词。",
+    meta: "网页设计 / 12 min",
+    href: "/notes/vibe-coding-visual-dictionary",
+  },
+  {
+    index: "07",
+    title: "FDE 是什么：把 AI 工具接到真实业务流程",
+    description:
+      "从业务观察、最小 Demo 到上线交付，理解前置部署工程师如何解决企业 AI 落地问题。",
+    meta: "AI 落地 / 9 min",
+    href: "/notes/fde-ai-implementation",
+  },
+  {
+    index: "08",
+    title: "视频制作 Skills 资源清单：先确认仓库、许可和可运行性",
+    description:
+      "整理一批视频制作相关的开源 Skill 入口，使用前先检查 README、许可证、依赖和输出质量。",
+    meta: "资源 / 5 min",
+    href: "/notes/video-workflow-skills",
+  },
+  {
+    index: "09",
+    title: "把小红书和抖音选题监控做成可复盘的工作流",
+    description:
+      "从关键词、对标账号到去重、评分和人工反馈，把重复刷平台变成可运行的内容监控系统。",
+    meta: "内容系统 / 12 min",
+    href: "/notes/content-boom-monitor",
+  },
+  {
+    index: "10",
+    title: "GitHub 从零入门：把代码保存、同步和协作起来",
+    description:
+      "理解 Git 与 GitHub 的区别，完成仓库、分支、提交、推送和 Pull Request 的基本操作。",
+    meta: "开发入门 / 10 min",
+    href: "/notes/github-zero-to-one",
+  },
 ];
 
 const experiments = [
