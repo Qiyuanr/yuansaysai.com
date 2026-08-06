@@ -1,4 +1,5 @@
 import { ParticleField } from "./ParticleField";
+import { importedNotes } from "./notes/generated";
 
 const notes = [
   {
@@ -29,7 +30,7 @@ const notes = [
     href: "/notes/five-ai-functions",
   },
   {
-    index: "04",
+    index: "16",
     column: "knowledge-workflows",
     title: "Obsidian + AI：把本地笔记库变成可调用的知识库",
     description:
@@ -38,7 +39,7 @@ const notes = [
     href: "/notes/obsidian-ai-workflow",
   },
   {
-    index: "05",
+    index: "34",
     column: "ai-creation",
     title: "个人 IP 插图工作流：先固定人物，再建立画风",
     description:
@@ -47,7 +48,7 @@ const notes = [
     href: "/notes/ip-illustration-skills",
   },
   {
-    index: "06",
+    index: "35",
     column: "ai-creation",
     title: "视频制作 Skills 资源清单：先确认仓库、许可和可运行性",
     description:
@@ -56,7 +57,7 @@ const notes = [
     href: "/notes/video-workflow-skills",
   },
   {
-    index: "07",
+    index: "104",
     column: "product-development",
     title: "Vibe Coding 视觉词典：滚动、反馈、风格与高级效果",
     description:
@@ -65,7 +66,7 @@ const notes = [
     href: "/notes/vibe-coding-visual-dictionary",
   },
   {
-    index: "08",
+    index: "105",
     column: "product-development",
     title: "FDE 是什么：把 AI 工具接到真实业务流程",
     description:
@@ -74,7 +75,7 @@ const notes = [
     href: "/notes/fde-ai-implementation",
   },
   {
-    index: "09",
+    index: "106",
     column: "product-development",
     title: "GitHub 从零入门：把代码保存、同步和协作起来",
     description:
@@ -83,7 +84,7 @@ const notes = [
     href: "/notes/github-zero-to-one",
   },
   {
-    index: "10",
+    index: "117",
     column: "content-operations",
     title: "把小红书和抖音选题监控做成可复盘的工作流",
     description:
@@ -91,6 +92,18 @@ const notes = [
     meta: "内容系统 / 12 min",
     href: "/notes/content-boom-monitor",
   },
+];
+
+const allNotes = [
+  ...notes,
+  ...importedNotes.map((note) => ({
+    index: note.index,
+    column: note.column,
+    title: note.title,
+    description: note.description,
+    meta: `${note.category} / ${note.readTime}`,
+    href: `/notes/${note.slug}`,
+  })),
 ];
 
 const columns = [
@@ -131,7 +144,7 @@ const columns = [
   },
 ].map((column) => ({
   ...column,
-  notes: notes.filter((note) => note.column === column.id),
+  notes: allNotes.filter((note) => note.column === column.id),
 }));
 
 const experiments = [

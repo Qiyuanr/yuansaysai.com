@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { importedNotes } from "../generated";
 
 type MediaItem = {
   type: "image" | "video";
@@ -230,7 +231,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "obsidian-ai-workflow": {
-    index: "04",
+    index: "16",
     category: "工作流",
     readTime: "10 min",
     title: "Obsidian + AI：把本地笔记库变成可调用的知识库",
@@ -305,7 +306,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "ip-illustration-skills": {
-    index: "05",
+    index: "34",
     category: "视觉工作流",
     readTime: "8 min",
     title: "个人 IP 插图工作流：先固定人物，再建立画风",
@@ -358,7 +359,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "vibe-coding-visual-dictionary": {
-    index: "07",
+    index: "104",
     category: "网页设计",
     readTime: "12 min",
     title: "Vibe Coding 视觉词典：滚动、反馈、风格与高级效果",
@@ -423,7 +424,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "fde-ai-implementation": {
-    index: "08",
+    index: "105",
     category: "AI 落地",
     readTime: "9 min",
     title: "FDE 是什么：把 AI 工具接到真实业务流程",
@@ -483,7 +484,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "video-workflow-skills": {
-    index: "06",
+    index: "35",
     category: "资源",
     readTime: "5 min",
     title: "视频制作 Skills 资源清单：先确认仓库、许可和可运行性",
@@ -524,7 +525,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "content-boom-monitor": {
-    index: "10",
+    index: "117",
     category: "内容系统",
     readTime: "12 min",
     title: "把小红书和抖音选题监控做成可复盘的工作流",
@@ -591,7 +592,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "github-zero-to-one": {
-    index: "09",
+    index: "106",
     category: "开发入门",
     readTime: "10 min",
     title: "GitHub 从零入门：把代码保存、同步和协作起来",
@@ -655,6 +656,93 @@ const articles: Record<string, Article> = {
   },
 };
 
+type ImportedNote = (typeof importedNotes)[number];
+
+const importedBySlug = Object.fromEntries(
+  importedNotes.map((note) => [note.slug, note]),
+) as Record<string, ImportedNote>;
+
+function renderInline(text: string) {
+  return text.split(/(https?:\/\/[^\s)）>]+)/g).map((part, index) =>
+    /^https?:\/\//.test(part) ? (
+      <a href={part} key={`${part}-${index}`} target="_blank" rel="noreferrer">
+        {part}
+      </a>
+    ) : (
+      <span key={`${index}-${part}`}>{part}</span>
+    ),
+  );
+}
+
+function ImportedNoteContent({ note }: { note: ImportedNote }) {
+  const quoted = note.quotedIds
+    .map((id) => importedBySlug[`note-${id}`])
+    .filter(Boolean);
+
+  return (
+    <>
+      <p className="article-disclaimer">
+        这是对公开笔记的知识化整理；其中收入、流量、效果等案例数据属于原帖陈述，未作独立验证。
+      </p>
+      {note.blocks.map((block, index) => {
+        if (block.kind === "heading") {
+          return <h2 key={index}>{renderInline(block.text)}</h2>;
+        }
+        if (block.kind === "paragraph") {
+          return <p key={index}>{renderInline(block.text)}</p>;
+        }
+        if (block.kind === "quote") {
+          return <blockquote key={index}>{renderInline(block.text)}</blockquote>;
+        }
+        if (block.kind === "list") {
+          const List = block.ordered ? "ol" : "ul";
+          return (
+            <List key={index} className="article-checklist">
+              {block.items.map((item, itemIndex) => <li key={itemIndex}>{renderInline(item)}</li>)}
+            </List>
+          );
+        }
+        if (block.kind === "code") {
+          return <pre key={index}><code>{block.text}</code></pre>;
+        }
+        if (block.kind === "divider") {
+          return <hr key={index} />;
+        }
+        if (block.kind === "image") {
+          return (
+            <figure className="article-imported-media" key={index}>
+              <img src={block.src} alt={block.alt} loading={index === 0 ? "eager" : "lazy"} referrerPolicy="no-referrer" />
+              <figcaption>{block.alt}</figcaption>
+            </figure>
+          );
+        }
+        if (block.kind === "video") {
+          return (
+            <figure className="article-imported-media" key={index}>
+              <video controls preload="metadata" poster={block.poster || undefined}>
+                <source src={block.src} type="video/mp4" />
+                <a href={block.src} target="_blank" rel="noreferrer">打开视频</a>
+              </video>
+              <figcaption>原文视频</figcaption>
+            </figure>
+          );
+        }
+        return null;
+      })}
+      {quoted.length > 0 && (
+        <aside className="article-callout">
+          <strong>引用链</strong>
+          <ul>
+            {quoted.map((item) => (
+              <li key={item.slug}><a href={`/notes/${item.slug}`}>{item.title}</a></li>
+            ))}
+          </ul>
+        </aside>
+      )}
+    </>
+  );
+}
+
 type ArticleSlug = keyof typeof articles;
 
 function ArticleMedia({
@@ -697,11 +785,22 @@ function ArticleMedia({
 }
 
 export function generateStaticParams() {
-  return Object.keys(articles).map((slug) => ({ slug }));
+  return [
+    ...Object.keys(articles).map((slug) => ({ slug })),
+    ...importedNotes.map((note) => ({ slug: note.slug })),
+  ];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  const imported = importedBySlug[slug];
+  if (imported) {
+    return {
+      title: imported.title,
+      description: imported.description,
+      alternates: { canonical: "/notes/" + slug },
+    };
+  }
   if (!(slug in articles)) return {};
   const article = articles[slug as ArticleSlug];
 
@@ -714,6 +813,34 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function NotePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const imported = importedBySlug[slug];
+  if (imported) {
+    return (
+      <main className="article-page">
+        <header className="article-header">
+          <a className="brand" href="/" aria-label="返回予安的 AI 偏方首页">
+            <span className="brand-mark">Y</span>
+            <span>予安的 AI 偏方</span>
+          </a>
+          <a className="article-back" href="/#notes">← 返回专栏</a>
+        </header>
+        <article className="article-shell">
+          <div className="article-meta"><span>{imported.index}</span><span>{imported.category}</span><span>{imported.readTime}</span></div>
+          <h1>{imported.title}</h1>
+          <p className="article-lead">{imported.description}</p>
+          <div className="article-content"><ImportedNoteContent note={imported} /></div>
+          <div className="article-source">
+            <span>公开来源</span>
+            <a href={imported.source} target="_blank" rel="noreferrer">查看来源链接 ↗</a>
+          </div>
+          <div className="article-footer">
+            <p>把问题讲清楚，AI 才能真正帮上忙。</p>
+            <a href="/#notes">继续看其他笔记 →</a>
+          </div>
+        </article>
+      </main>
+    );
+  }
   if (!(slug in articles)) notFound();
   const article = articles[slug as ArticleSlug];
 
