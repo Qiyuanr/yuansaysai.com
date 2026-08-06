@@ -8911,7 +8911,7 @@ export const importedNotes = [
       },
       {
         "kind": "paragraph",
-        "text": "![](codex-video-peitu-04-feedback-loop.png) — 未授权读取目录"
+        "text": "[原文本地素材未随公开页面提供]"
       },
       {
         "kind": "heading",
