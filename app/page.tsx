@@ -48,24 +48,6 @@ const notes = [
   },
   {
     index: "06",
-    column: "product-development",
-    title: "Vibe Coding 视觉词典：滚动、反馈、风格与高级效果",
-    description:
-      "把模糊的“高级感”拆成可描述的网页行为、视觉语言和可复制提示词。",
-    meta: "网页设计 / 12 min",
-    href: "/notes/vibe-coding-visual-dictionary",
-  },
-  {
-    index: "07",
-    column: "product-development",
-    title: "FDE 是什么：把 AI 工具接到真实业务流程",
-    description:
-      "从业务观察、最小 Demo 到上线交付，理解前置部署工程师如何解决企业 AI 落地问题。",
-    meta: "AI 落地 / 9 min",
-    href: "/notes/fde-ai-implementation",
-  },
-  {
-    index: "08",
     column: "ai-creation",
     title: "视频制作 Skills 资源清单：先确认仓库、许可和可运行性",
     description:
@@ -74,22 +56,40 @@ const notes = [
     href: "/notes/video-workflow-skills",
   },
   {
-    index: "09",
-    column: "content-operations",
-    title: "把小红书和抖音选题监控做成可复盘的工作流",
+    index: "07",
+    column: "product-development",
+    title: "Vibe Coding 视觉词典：滚动、反馈、风格与高级效果",
     description:
-      "从关键词、对标账号到去重、评分和人工反馈，把重复刷平台变成可运行的内容监控系统。",
-    meta: "内容系统 / 12 min",
-    href: "/notes/content-boom-monitor",
+      "把模糊的“高级感”拆成可描述的网页行为、视觉语言和可复制提示词。",
+    meta: "网页设计 / 12 min",
+    href: "/notes/vibe-coding-visual-dictionary",
   },
   {
-    index: "10",
+    index: "08",
+    column: "product-development",
+    title: "FDE 是什么：把 AI 工具接到真实业务流程",
+    description:
+      "从业务观察、最小 Demo 到上线交付，理解前置部署工程师如何解决企业 AI 落地问题。",
+    meta: "AI 落地 / 9 min",
+    href: "/notes/fde-ai-implementation",
+  },
+  {
+    index: "09",
     column: "product-development",
     title: "GitHub 从零入门：把代码保存、同步和协作起来",
     description:
       "理解 Git 与 GitHub 的区别，完成仓库、分支、提交、推送和 Pull Request 的基本操作。",
     meta: "开发入门 / 10 min",
     href: "/notes/github-zero-to-one",
+  },
+  {
+    index: "10",
+    column: "content-operations",
+    title: "把小红书和抖音选题监控做成可复盘的工作流",
+    description:
+      "从关键词、对标账号到去重、评分和人工反馈，把重复刷平台变成可运行的内容监控系统。",
+    meta: "内容系统 / 12 min",
+    href: "/notes/content-boom-monitor",
   },
 ];
 

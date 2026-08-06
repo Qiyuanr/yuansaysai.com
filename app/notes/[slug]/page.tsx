@@ -358,7 +358,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "vibe-coding-visual-dictionary": {
-    index: "06",
+    index: "07",
     category: "网页设计",
     readTime: "12 min",
     title: "Vibe Coding 视觉词典：滚动、反馈、风格与高级效果",
@@ -423,7 +423,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "fde-ai-implementation": {
-    index: "07",
+    index: "08",
     category: "AI 落地",
     readTime: "9 min",
     title: "FDE 是什么：把 AI 工具接到真实业务流程",
@@ -483,7 +483,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "video-workflow-skills": {
-    index: "08",
+    index: "06",
     category: "资源",
     readTime: "5 min",
     title: "视频制作 Skills 资源清单：先确认仓库、许可和可运行性",
@@ -524,7 +524,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "content-boom-monitor": {
-    index: "09",
+    index: "10",
     category: "内容系统",
     readTime: "12 min",
     title: "把小红书和抖音选题监控做成可复盘的工作流",
@@ -591,7 +591,7 @@ const articles: Record<string, Article> = {
     ),
   },
   "github-zero-to-one": {
-    index: "10",
+    index: "09",
     category: "开发入门",
     readTime: "10 min",
     title: "GitHub 从零入门：把代码保存、同步和协作起来",
