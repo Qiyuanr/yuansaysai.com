@@ -945,6 +945,12 @@ a {
   border-top: 1px solid var(--line);
 }
 
+.article-inline-media {
+  margin: 34px 0 48px;
+  padding-top: 0;
+  border-top: 0;
+}
+
 .article-media h2 {
   margin: 0 0 14px;
   color: var(--acid);
@@ -966,6 +972,10 @@ a {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+}
+
+.article-media-grid-single {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .article-media-item {

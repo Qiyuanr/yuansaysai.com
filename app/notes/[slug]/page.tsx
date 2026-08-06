@@ -16,7 +16,6 @@ type Article = {
   title: string;
   description: string;
   content: ReactNode;
-  media?: MediaItem[];
   source?: string;
 };
 
@@ -237,13 +236,13 @@ const articles: Record<string, Article> = {
     title: "Obsidian + AI：把本地笔记库变成可调用的知识库",
     description: "从本地 Markdown 笔记、基础插件到 AI 接入和跨设备同步，搭一套可持续维护的知识库。",
     source: "https://x.com/xilo2991/status/2084967640498614588",
-    media: obsidianMedia,
     content: (
       <>
         <section>
           <p>Obsidian 的核心是一个本地文件夹：笔记保存为 Markdown 文件，图片、PDF、音频等附件以普通文件保存。只要授权，支持文件访问的 AI 工具就能直接读取、整理和修改这些内容。</p>
           <p>这让知识库可以成为 AI 的长期上下文，而不是每次对话都重新解释背景。</p>
         </section>
+        <ArticleMedia items={obsidianMedia.slice(0, 2)} inline startIndex={0} />
         <section>
           <h2>一、安装与创建知识库</h2>
           <p>从<a href="https://obsidian.md/download.html" target="_blank" rel="noreferrer">官方页面下载 Obsidian</a>。第一次打开时创建一个 Vault。Vault 本质上就是电脑上的一个文件夹，笔记和附件都会保存在里面。</p>
@@ -254,11 +253,13 @@ const articles: Record<string, Article> = {
             <li>同步方案等实际使用后再决定。</li>
           </ul>
         </section>
+        <ArticleMedia items={obsidianMedia.slice(2, 4)} inline startIndex={2} />
         <section>
           <h2>二、先掌握这几种 Markdown</h2>
           <pre><code>{"# 一级标题\n## 二级标题\n\n- 无序列表\n1. 有序列表\n\n**粗体**\n*斜体*\n\n[[另一篇笔记]]"}</code></pre>
           <p>刚开始不需要学习完整语法。标题、列表、强调文字和双向链接，已经足够建立基本知识库。</p>
         </section>
+        <ArticleMedia items={obsidianMedia.slice(4, 6)} inline startIndex={4} />
         <section>
           <h2>三、插件按需求安装</h2>
           <ol className="article-steps">
@@ -270,12 +271,14 @@ const articles: Record<string, Article> = {
           </ol>
           <p>社区插件会运行第三方代码，安装前应检查维护状态、权限和代码来源。可参考<a href="https://obsidian.md/help/community-plugins" target="_blank" rel="noreferrer">官方插件说明</a>。</p>
         </section>
+        <ArticleMedia items={obsidianMedia.slice(6, 10)} inline startIndex={6} />
         <section>
           <h2>四、把 Obsidian 接入 AI</h2>
           <p>最简单的方式，是让 Codex、Claude Code 等工具打开 Vault 文件夹。AI 可以读取已有笔记、整理重复内容、生成初稿，并把结果写回 Markdown 文件。</p>
           <div className="article-callout"><strong>推荐工作流</strong><p>素材收集 → 知识库归档 → AI 检索 → 生成初稿 → 人工审核 → 回写笔记</p></div>
           <p>第一次使用时先只开放读取权限，确认 AI 能正确理解文件结构后，再允许它修改内容。</p>
         </section>
+        <ArticleMedia items={obsidianMedia.slice(10, 14)} inline startIndex={10} />
         <section>
           <h2>五、选择同步方式</h2>
           <ul className="article-checklist">
@@ -287,6 +290,7 @@ const articles: Record<string, Article> = {
           </ul>
           <p>同步前要注意同时编辑冲突、附件同步范围，以及移动端能否访问同步后的本地文件夹。官方价格和套餐可能变化，使用前查看<a href="https://obsidian.md/pricing.html" target="_blank" rel="noreferrer">官方价格页面</a>。</p>
         </section>
+        <ArticleMedia items={obsidianMedia.slice(14, 18)} inline startIndex={14} />
         <section>
           <h2>六、最小上手路径</h2>
           <ol className="article-steps">
@@ -307,10 +311,10 @@ const articles: Record<string, Article> = {
     title: "个人 IP 插图工作流：先固定人物，再建立画风",
     description: "用两层参考资料让 AI 保持人物一致，并让配图真正服务于文章观点。",
     source: "https://x.com/jinchenma_ai/status/2084920438799630581",
-    media: ipIllustrationMedia,
     content: (
       <>
         <section><p>一套可复用的个人 IP 插图工作流，可以拆成两个独立部分：人物设定和文章插图。前者解决“画的是谁”，后者解决“画面表达什么”。</p><p>把两部分分开，文章主题变化时只调整场景和动作，人物的核心特征与整体视觉仍能保持稳定。</p></section>
+        <ArticleMedia items={ipIllustrationMedia.slice(0, 2)} inline startIndex={0} />
         <section>
           <h2>一、先建立人物参考</h2>
           <p>选择一张人物清晰、轮廓明确的照片，要求 AI 生成正面、侧面和背面三视图，并记录需要长期保留的特征。</p>
@@ -322,11 +326,13 @@ const articles: Record<string, Article> = {
           </ul>
           <p>三视图可以补足单张照片没有展示的角度。以后人物转身、行走或背对读者时，AI 有统一参考，不需要每次重新猜测人物外观。</p>
         </section>
+        <ArticleMedia items={ipIllustrationMedia.slice(2, 4)} inline startIndex={2} />
         <section>
           <h2>二、把个人审美写成画风规则</h2>
           <p>收集几张喜欢的参考图，让 AI 分析它们在构图、色彩、线条、留白和氛围上的共同点。真正需要提炼的是可重复的规则，而不是照搬某一张图。</p>
           <p>可以先确定画面比例、背景明暗、颜色数量、人物比例、元素密度和抽象程度。规则越具体，后续生成越容易保持一致。</p>
         </section>
+        <ArticleMedia items={ipIllustrationMedia.slice(4, 6)} inline startIndex={4} />
         <section>
           <h2>三、让人物参与观点表达</h2>
           <p>先让 AI 读完整篇文章，再决定哪些观点值得变成图片。每张图只表达一个主要意思，人物动作、物件和构图都围绕这个意思安排。</p>
@@ -341,11 +347,13 @@ const articles: Record<string, Article> = {
           <p>画风不必一次确定。把规则用于真实文章后，记录哪些留白、动作、颜色和构图有效；画面过于复杂就减少物件，表达不清就重新调整人物动作和视觉关系。</p>
           <p>每轮把有效做法写回风格说明，几轮之后，个人审美就会变成可以重复调用的视觉语言。</p>
         </section>
+        <ArticleMedia items={ipIllustrationMedia.slice(6, 7)} inline startIndex={6} />
         <section>
           <h2>五、相关 Skill 资源</h2>
           <p>原文提供了一个包含两个 Skill 的仓库：<a href="https://github.com/jinchenma94/jinchenma-ip-skills" target="_blank" rel="noreferrer">jinchenma-ip-skills</a>。其中一个用于建立人物三视图和设定，另一个用于读取文章并生成插图。</p>
           <p>安装前仍应查看仓库 README、许可证、依赖和当前维护状态；不要把照片或私人资料交给未经确认的工具。</p>
         </section>
+        <ArticleMedia items={ipIllustrationMedia.slice(7, 8)} inline startIndex={7} />
       </>
     ),
   },
@@ -356,7 +364,6 @@ const articles: Record<string, Article> = {
     title: "Vibe Coding 视觉词典：滚动、反馈、风格与高级效果",
     description: "把模糊的“高级感”拆成可描述的网页行为、视觉语言和可复制提示词。",
     source: "https://x.com/AdrianPunk115/status/2084932520953753985",
-    media: vibeCodingMedia,
     content: (
       <>
         <section><p>让 AI 做网页时，只说“高级、简洁、有设计感”通常不够。更有效的方式，是把需求拆成概念说明、适用场景、交互边界和可访问性要求。</p><p>以下词典适合当作网页需求清单。一次选少量效果，并明确移动端、键盘操作、性能和减少动态模式下的降级方案。</p></section>
@@ -375,6 +382,7 @@ const articles: Record<string, Article> = {
             <li><strong>Scroll-driven Animation</strong><span>让动画进度与滚动位置对应，并提供不支持浏览器的降级方案。</span></li>
           </ol>
         </section>
+        <ArticleMedia items={vibeCodingMedia.slice(0, 5)} inline startIndex={0} />
         <section>
           <h2>二、提示与加载状态</h2>
           <ul className="article-checklist">
@@ -388,6 +396,7 @@ const articles: Record<string, Article> = {
             <li>Inline Validation：在字段附近给出具体错误，不要只显示“表单有问题”。</li>
           </ul>
         </section>
+        <ArticleMedia items={vibeCodingMedia.slice(5, 9)} inline startIndex={5} />
         <section>
           <h2>三、选择视觉风格</h2>
           <ol className="article-steps">
@@ -402,12 +411,14 @@ const articles: Record<string, Article> = {
             <li><strong>Neumorphism</strong><span>只适合局部控制组件，必须保留清晰边界和 focus 状态。</span></li>
           </ol>
         </section>
+        <ArticleMedia items={vibeCodingMedia.slice(9, 14)} inline startIndex={9} />
         <section>
           <h2>四、高级效果要有边界</h2>
           <p>Custom Cursor、Magnetic Button、3D Tilt、Spotlight、Text Mask、Clip-path、Three.js 和 View Transitions 都可以增强体验，但不应成为完成任务的必要条件。</p>
           <p>所有动画都要支持 <code>prefers-reduced-motion: reduce</code>。移动端和低性能设备应降低效果或使用静态回退图。视觉效果上线前，先给图片、字体、脚本和 WebGL 设定性能预算。</p>
           <div className="prompt-box">请为「项目」设计响应式网页。请分别说明滚动动作、加载状态、视觉风格和高级效果；每个效果都要给出适用场景、性能限制、键盘操作、移动端降级和 reduced motion 方案。不要为了动画隐藏内容或牺牲首屏加载。</div>
         </section>
+        <ArticleMedia items={vibeCodingMedia.slice(14, 19)} inline startIndex={14} />
       </>
     ),
   },
@@ -418,15 +429,16 @@ const articles: Record<string, Article> = {
     title: "FDE 是什么：把 AI 工具接到真实业务流程",
     description: "从业务观察、最小 Demo 到上线交付，理解前置部署工程师如何解决企业 AI 落地问题。",
     source: "https://x.com/Shenmeili1213/status/2084857018356297898",
-    media: fdeMedia,
     content: (
       <>
         <section><p>FDE 是 Forward Deployed Engineer 的缩写，可以理解为前置部署工程师。它不只是写代码，而是进入客户的真实业务流程，找出问题、搭建方案、完成集成并推动上线。</p><p>大模型和工具是标准化能力，但不同企业的数据、流程和权限结构差异很大。FDE 的价值就在于把通用能力接到具体业务上。</p></section>
+        <ArticleMedia items={fdeMedia.slice(0, 2)} inline startIndex={0} />
         <section>
           <h2>一、FDE 与普通外包的区别</h2>
           <p>外包通常围绕明确的交付物执行；FDE 先观察流程，再确认真正的问题。比如客户提出“做一个 AI 客服”，现场可能发现根因是多个业务系统的客户数据没有连通。</p>
           <div className="article-callout"><strong>判断顺序</strong><p>先确认业务结果，再决定模型、工具和界面。不要把工具名称当成项目目标。</p></div>
         </section>
+        <ArticleMedia items={fdeMedia.slice(2, 3)} inline startIndex={2} />
         <section>
           <h2>二、一套可复用的落地流程</h2>
           <ol className="article-steps">
@@ -438,6 +450,7 @@ const articles: Record<string, Article> = {
             <li><strong>交付复盘</strong><span>用时间、错误率、处理量和用户反馈评估实际效果。</span></li>
           </ol>
         </section>
+        <ArticleMedia items={fdeMedia.slice(3, 5)} inline startIndex={3} />
         <section>
           <h2>三、适合小规模试点的场景</h2>
           <ul className="article-checklist">
@@ -448,6 +461,7 @@ const articles: Record<string, Article> = {
             <li>流程审批：提取合同、报销或采购信息，人工完成最终确认。</li>
           </ul>
         </section>
+        <ArticleMedia items={fdeMedia.slice(5, 7)} inline startIndex={5} />
         <section>
           <h2>四、工具只是执行层</h2>
           <p>原文以 WorkBuddy、Skill 和 MCP 作为示例。它们可以分别承担任务规划、能力扩展和系统连接，但具体产品能力、权限和可用连接器会变化，使用前应以官方文档为准。</p>
@@ -464,6 +478,7 @@ const articles: Record<string, Article> = {
           </ol>
           <p>不要承诺“自动化后一定省多少人”或“保证爆款”。先定义可测量的流程指标，再根据真实结果迭代。</p>
         </section>
+        <ArticleMedia items={fdeMedia.slice(7, 8)} inline startIndex={7} />
       </>
     ),
   },
@@ -515,20 +530,22 @@ const articles: Record<string, Article> = {
     title: "把小红书和抖音选题监控做成可复盘的工作流",
     description: "从关键词、对标账号到去重、评分和人工反馈，把重复刷平台变成可运行的内容监控系统。",
     source: "https://x.com/DZhao63405/status/2084492080173429047",
-    media: boomMonitorMedia,
     content: (
       <>
         <section><p>手动刷平台、记录热门内容和整理链接，短期可以完成，长期很难稳定坚持。更值得搭建的是一条可重复运行的链路：读取监控目标、获取公开数据、清洗去重、筛选重点、生成报告，再把判断结果沉淀下来。</p></section>
+        <ArticleMedia items={boomMonitorMedia.slice(0, 1)} inline startIndex={0} />
         <section>
           <h2>一、系统要解决什么问题</h2>
           <p>这类系统不负责预测未来爆款，而是缩小每天需要人工查看的范围，并保留证据和处理状态。关键词监控负责发现候选内容，对标账号监控负责寻找相对异常的作品。</p>
           <div className="article-callout"><strong>核心边界</strong><p>采集、字段映射、去重和计算交给确定性程序；内容结构判断交给 AI；是否值得跟进由人决定。</p></div>
         </section>
+        <ArticleMedia items={boomMonitorMedia.slice(1, 2)} inline startIndex={1} />
         <section>
           <h2>二、推荐架构</h2>
           <pre><code>{"飞书录入关键词 / 账号\n        ↓\nCodex Skill 读取配置并限量执行\n        ↓\n平台接口获取公开数据\n        ↓\n清洗、标准化、去重、计算\n        ↓\n监控简报 + 飞书内容库\n        ↓\n人工标记：跟进 / 观察 / 不相关 / 已采用"}</code></pre>
           <p>系统应保留原始响应的脱敏版本，标准化记录至少包含平台、作品 ID、标题、链接、发布时间、作者和实际可用的互动指标。</p>
         </section>
+        <ArticleMedia items={boomMonitorMedia.slice(2, 3)} inline startIndex={2} />
         <section>
           <h2>三、两类监控引擎</h2>
           <ol className="article-steps">
@@ -543,6 +560,7 @@ const articles: Record<string, Article> = {
           <p>对标账号可以计算：当前作品互动值 ÷ 同账号其他作品互动值中位数。建议至少有足够的同批样本后再计算，否则显示“样本不足”，不要伪造结果。</p>
           <p>这些分数只用于安排查看顺序，不等于全平台爆款认证，也不代表未来一定会获得流量。</p>
         </section>
+        <ArticleMedia items={boomMonitorMedia.slice(3, 4)} inline startIndex={3} />
         <section>
           <h2>五、飞书内容库怎么设计</h2>
           <ul className="article-checklist">
@@ -554,6 +572,7 @@ const articles: Record<string, Article> = {
           </ul>
           <p>处理状态可以固定为：待评估、值得跟进、继续观察、不相关、已采用。机器字段和人阅读的字段分开，系统更容易长期维护。</p>
         </section>
+        <ArticleMedia items={boomMonitorMedia.slice(4, 5)} inline startIndex={4} />
         <section>
           <h2>六、从小规模试跑开始</h2>
           <ol className="article-steps">
@@ -578,21 +597,23 @@ const articles: Record<string, Article> = {
     title: "GitHub 从零入门：把代码保存、同步和协作起来",
     description: "理解 Git 与 GitHub 的区别，完成仓库、分支、提交、推送和 Pull Request 的基本操作。",
     source: "https://x.com/AdrianPunk115/status/2074744543170469894",
-    media: githubMedia,
     content: (
       <>
         <section><p>Git 是电脑上的版本管理工具，GitHub 是用于托管代码、同步和协作的平台。可以只使用 Git，也可以把 Git 仓库同步到 GitHub。</p></section>
+        <ArticleMedia items={githubMedia.slice(0, 2)} inline startIndex={0} />
         <section>
           <h2>一、准备账号和工具</h2>
           <p>在<a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>注册账号。Git 的安装包可以从<a href="https://git-scm.com/downloads" target="_blank" rel="noreferrer">官方页面</a>获取。</p>
           <p>安装完成后，在终端确认：</p>
           <pre><code>{"git --version"}</code></pre>
         </section>
+        <ArticleMedia items={githubMedia.slice(2, 4)} inline startIndex={2} />
         <section>
           <h2>二、初次配置 Git</h2>
           <pre><code>{"git config --global user.name \"你的名字\"\ngit config --global user.email \"你的邮箱@example.com\"\ngit config --list"}</code></pre>
           <p>全局配置会用于以后所有项目。需要不同身份时，可以在具体项目目录单独配置。</p>
         </section>
+        <ArticleMedia items={githubMedia.slice(4, 6)} inline startIndex={4} />
         <section>
           <h2>三、创建仓库并完成第一次同步</h2>
           <p>在 GitHub 创建 Repository，填写仓库名和可选描述，再选择公开或私有。README 可以作为项目说明书，写清楚项目用途、安装和使用方式。</p>
@@ -600,12 +621,14 @@ const articles: Record<string, Article> = {
           <pre><code>{"git clone https://github.com/用户名/仓库名.git\ncd 仓库名\ngit status\ngit add .\ngit commit -m \"说明本次修改\"\ngit push"}</code></pre>
           <p>add 把修改放入暂存区，commit 创建本地存档，push 把存档推送到 GitHub。提交信息要能说明这次改了什么。</p>
         </section>
+        <ArticleMedia items={githubMedia.slice(6, 8)} inline startIndex={6} />
         <section>
           <h2>四、分支和 Pull Request</h2>
           <p>分支是一条独立开发线，适合在不影响主分支的情况下开发功能或修复问题。</p>
           <pre><code>{"git checkout -b feature-login\ngit status\ngit add .\ngit commit -m \"添加登录功能\"\ngit push -u origin feature-login"}</code></pre>
           <p>推送后可以在 GitHub 发起 Pull Request，请其他人审查修改，再决定是否合并到主分支。</p>
         </section>
+        <ArticleMedia items={githubMedia.slice(8, 10)} inline startIndex={8} />
         <section>
           <h2>五、使用别人的仓库</h2>
           <ol className="article-steps">
@@ -616,6 +639,7 @@ const articles: Record<string, Article> = {
           </ol>
           <pre><code>{"git clone https://github.com/项目所有者/项目名.git\ncd 项目名\ngit pull"}</code></pre>
         </section>
+        <ArticleMedia items={githubMedia.slice(10, 12)} inline startIndex={10} />
         <section>
           <h2>六、日常安全习惯</h2>
           <ul className="article-checklist">
@@ -633,12 +657,27 @@ const articles: Record<string, Article> = {
 
 type ArticleSlug = keyof typeof articles;
 
-function ArticleMedia({ items }: { items: MediaItem[] }) {
+function ArticleMedia({
+  items,
+  inline = false,
+  startIndex = 0,
+}: {
+  items: MediaItem[];
+  inline?: boolean;
+  startIndex?: number;
+}) {
   return (
-    <section className="article-media" aria-label="原文配图与媒体">
-      <h2>原文配图与媒体</h2>
-      <p className="article-media-note">以下媒体按原始链接顺序保留。图片和视频来自来源页面，发布时不将其当作本站原创素材。</p>
-      <div className="article-media-grid">
+    <section
+      className={inline ? "article-media article-inline-media" : "article-media"}
+      aria-label={inline ? "相关配图与媒体" : "原文配图与媒体"}
+    >
+      {!inline && (
+        <>
+          <h2>原文配图与媒体</h2>
+          <p className="article-media-note">以下媒体按原始链接顺序保留。图片和视频来自来源页面，发布时不将其当作本站原创素材。</p>
+        </>
+      )}
+      <div className={items.length === 1 ? "article-media-grid article-media-grid-single" : "article-media-grid"}>
         {items.map((item, index) => (
           <figure key={item.src} className="article-media-item">
             {item.type === "video" ? (
@@ -647,9 +686,9 @@ function ArticleMedia({ items }: { items: MediaItem[] }) {
                 <a href={item.src} target="_blank" rel="noreferrer">打开视频</a>
               </video>
             ) : (
-              <img src={item.src} alt={item.alt ?? "文章配图"} loading={index === 0 ? "eager" : "lazy"} referrerPolicy="no-referrer" />
+              <img src={item.src} alt={item.alt ?? "文章配图"} loading={startIndex === 0 && index === 0 ? "eager" : "lazy"} referrerPolicy="no-referrer" />
             )}
-            <figcaption>{item.type === "video" ? "动态演示" : "配图 " + (index + 1)}</figcaption>
+            <figcaption>{item.type === "video" ? "动态演示" : "配图 " + (startIndex + index + 1)}</figcaption>
           </figure>
         ))}
       </div>
@@ -692,7 +731,6 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
         <h1>{article.title}</h1>
         <p className="article-lead">{article.description}</p>
         <div className="article-content">{article.content}</div>
-        {article.media && <ArticleMedia items={article.media} />}
         {article.source && (
           <div className="article-source">
             <span>原始资料</span>
