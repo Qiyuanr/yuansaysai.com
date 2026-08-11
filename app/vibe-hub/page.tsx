@@ -51,6 +51,7 @@ export default function VibeHubPage() {
         <nav aria-label="术语图鉴导航">
           <a href="#taxonomy">分类</a>
           <a href="#explorer">搜索</a>
+          <a href="#interactive-demos">演示</a>
           <a href="#companion">延伸</a>
         </nav>
         <a
@@ -74,7 +75,7 @@ export default function VibeHubPage() {
           </h1>
           <p>
             这是一个面向普通人的 Vibe Coding 术语入口。你不必先学会写代码，
-            只需要找到准确的名字，再把需求说明白。
+            只需要找到准确的名字，再亲手操作一次，把需求说明白。
           </p>
           <a className="button button-primary" href="#explorer">
             搜索一个术语 <span aria-hidden="true">↓</span>
@@ -90,8 +91,8 @@ export default function VibeHubPage() {
             <span>大分类</span>
           </div>
           <div>
-            <strong>LIVE</strong>
-            <span>实时读取</span>
+            <strong>29</strong>
+            <span>可操作示例</span>
           </div>
         </div>
       </section>
@@ -143,7 +144,7 @@ export default function VibeHubPage() {
       <section className={styles.provenance} aria-label="内容来源说明">
         <p>
           本板块是独立的信息入口，不复制 VibeHub 的视觉设计或整站正文。
-          术语搜索与详情由其公开 API 实时返回，内容版权归原站；页面保留原文链接。
+          术语搜索与详情由其公开 API 实时返回，页面保留原文链接；互动示例在本站独立实现。
         </p>
         <a href="https://vibe-hub.org/" target="_blank" rel="noreferrer">
           vibe-hub.org ↗

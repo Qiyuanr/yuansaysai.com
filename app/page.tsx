@@ -242,12 +242,12 @@ export default function Home() {
           <div className={vibeStyles.homeSpotlightCopy}>
             <p>
               不知道“那个弹出来的小框”叫什么？把口语描述变成准确术语，
-              再把需求直接交给 Agent。
+              先亲手操作按钮、输入框和弹窗，再把需求直接交给 Agent。
             </p>
             <div aria-label="板块规模">
               <span>250 个术语</span>
               <span>7 大分类</span>
-              <span>实时查询</span>
+              <span>29 个可操作示例</span>
             </div>
             <a className="button" href="/vibe-hub">
               打开术语图鉴 <span aria-hidden="true">→</span>

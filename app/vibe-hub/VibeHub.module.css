@@ -334,6 +334,1045 @@
   line-height: 1.5;
 }
 
+.demoGallery {
+  scroll-margin-top: 28px;
+  margin-top: 76px;
+  padding-top: 54px;
+  border-top: 1px solid var(--line);
+}
+
+.demoGalleryHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+  gap: 6vw;
+  align-items: end;
+  margin-bottom: 30px;
+}
+
+.demoGalleryHeader span {
+  color: var(--acid);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.09em;
+}
+
+.demoGalleryHeader h3 {
+  margin: 11px 0 0;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: clamp(38px, 5vw, 66px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+}
+
+.demoGalleryHeader p {
+  margin: 0;
+  color: rgba(242, 239, 232, 0.55);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.demoGroupTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  padding: 1px;
+  background: var(--line);
+}
+
+.demoGroupTabs button {
+  flex: 1 1 150px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 16px;
+  border: 0;
+  background: #111313;
+  color: rgba(242, 239, 232, 0.64);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.demoGroupTabs button[aria-selected="true"] {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.demoGroupTabs small {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  opacity: 0.55;
+}
+
+.demoGalleryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 1px;
+  padding: 1px;
+  background: var(--line);
+}
+
+.demoCard {
+  min-width: 0;
+  min-height: 390px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background: #111313;
+}
+
+.demoCardTitle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.demoCardTitle > span {
+  color: rgba(242, 239, 232, 0.4);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.demoCardTitle > button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--paper);
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.demoCardTitle > button:hover {
+  color: var(--acid);
+}
+
+.demoCardTitle i {
+  font-family: sans-serif;
+  font-size: 16px;
+  font-style: normal;
+}
+
+.demoCard > p {
+  margin: 14px 0 24px;
+  color: rgba(242, 239, 232, 0.52);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.termDemo {
+  position: relative;
+  min-height: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 48px;
+  padding: 30px;
+  overflow: hidden;
+  border: 1px solid rgba(12, 13, 13, 0.14);
+  background:
+    linear-gradient(rgba(12, 13, 13, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(12, 13, 13, 0.035) 1px, transparent 1px),
+    var(--paper);
+  background-size: 24px 24px;
+  color: var(--ink);
+}
+
+.termDemoCompact {
+  min-height: 205px;
+  margin-top: auto;
+  padding: 20px;
+}
+
+.termDemo button,
+.termDemo input,
+.termDemo textarea,
+.termDemo select {
+  font: inherit;
+}
+
+.termDemo button,
+.termDemo a,
+.termDemo input,
+.termDemo textarea,
+.termDemo select {
+  outline-offset: 3px;
+}
+
+.termDemo button {
+  cursor: pointer;
+}
+
+.termDemo button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.demoActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.demoPrimary,
+.demoSecondary,
+.demoDanger {
+  min-height: 43px;
+  padding: 0 18px;
+  border: 1px solid var(--ink);
+  font-weight: 650;
+}
+
+.demoPrimary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.demoSecondary {
+  background: transparent;
+  color: var(--ink);
+}
+
+.demoDanger {
+  border-color: #bb3b2d;
+  background: #bb3b2d;
+  color: white;
+}
+
+.demoStatus {
+  margin: 16px 0 0;
+  color: rgba(12, 13, 13, 0.56);
+  font-size: 11px;
+}
+
+.demoLinkCopy {
+  max-width: 430px;
+  line-height: 1.8;
+}
+
+.demoLinkCopy p {
+  margin: 0 0 20px;
+  color: rgba(12, 13, 13, 0.64);
+}
+
+.demoLinkCopy a {
+  color: #426000;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.demoField {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 9px;
+}
+
+.demoField > span,
+.numberDemo > span,
+.rateDemo > span,
+.searchDemo > label {
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.demoField input:not([type="range"]),
+.demoField textarea,
+.demoField select,
+.searchDemo input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(12, 13, 13, 0.22);
+  border-radius: 0;
+  background: white;
+  color: var(--ink);
+}
+
+.demoField textarea {
+  min-height: 94px;
+  resize: vertical;
+}
+
+.demoField input[type="range"] {
+  width: 100%;
+  accent-color: #526f00;
+}
+
+.demoField small,
+.numberDemo small,
+.demoChoices small,
+.rateDemo small,
+.uploadDemo small,
+.toastDemo small,
+.overlayDemo > small,
+.badgeDemo small {
+  color: rgba(12, 13, 13, 0.52);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.numberDemo {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.numberDemo > div {
+  display: grid;
+  grid-template-columns: 42px 82px 42px;
+  border: 1px solid rgba(12, 13, 13, 0.24);
+  background: white;
+}
+
+.numberDemo button,
+.numberDemo input {
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: center;
+}
+
+.numberDemo button:first-child {
+  border-right: 1px solid rgba(12, 13, 13, 0.15);
+}
+
+.numberDemo button:last-child {
+  border-left: 1px solid rgba(12, 13, 13, 0.15);
+}
+
+.numberDemo input {
+  min-width: 0;
+  appearance: textfield;
+}
+
+.numberDemo input::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+.demoChoices {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.demoChoices legend {
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.demoChoices label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.demoChoices input {
+  accent-color: #526f00;
+}
+
+.switchDemo {
+  width: min(100%, 380px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.switchDemo > div {
+  display: grid;
+  gap: 4px;
+}
+
+.switchDemo small {
+  color: rgba(12, 13, 13, 0.5);
+}
+
+.switchDemo > button {
+  width: 54px;
+  height: 30px;
+  padding: 3px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(12, 13, 13, 0.24);
+}
+
+.switchDemo > button[aria-checked="true"] {
+  background: #526f00;
+}
+
+.switchDemo > button span {
+  width: 24px;
+  height: 24px;
+  display: block;
+  border-radius: 50%;
+  background: white;
+  transition: transform 160ms ease;
+}
+
+.switchDemo > button[aria-checked="true"] span {
+  transform: translateX(24px);
+}
+
+.rateDemo {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.rateDemo > div {
+  display: flex;
+}
+
+.rateDemo button {
+  padding: 2px;
+  border: 0;
+  background: transparent;
+  color: #aa7500;
+  font-size: 28px;
+}
+
+.uploadDemo {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.uploadDemo label {
+  padding: 13px 18px;
+  border: 1px dashed rgba(12, 13, 13, 0.4);
+  background: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.uploadDemo input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.tabsDemo {
+  width: min(100%, 440px);
+}
+
+.tabsDemo > div {
+  display: flex;
+  border-bottom: 1px solid rgba(12, 13, 13, 0.2);
+}
+
+.tabsDemo button {
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: rgba(12, 13, 13, 0.55);
+}
+
+.tabsDemo button[aria-selected="true"] {
+  border-color: #526f00;
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.tabsDemo p {
+  min-height: 72px;
+  margin: 0;
+  padding: 18px 14px;
+  background: rgba(255, 255, 255, 0.52);
+  font-size: 13px;
+}
+
+.collapseDemo {
+  width: min(100%, 460px);
+  border: 1px solid rgba(12, 13, 13, 0.2);
+  background: white;
+}
+
+.collapseDemo > button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+
+.collapseDemo i {
+  font-style: normal;
+}
+
+.collapseDemo p {
+  margin: 0;
+  padding: 0 15px 16px;
+  color: rgba(12, 13, 13, 0.58);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.carouselDemo {
+  width: min(100%, 480px);
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.carouselDemo > button {
+  border: 1px solid rgba(12, 13, 13, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.carouselDemo > div {
+  min-height: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  background: var(--mint);
+}
+
+.carouselDemo span {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+}
+
+.badgeDemo {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.badgeDemo button {
+  position: relative;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--ink);
+  background: white;
+}
+
+.badgeDemo button span {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  min-width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #bb3b2d;
+  color: white;
+  font-size: 10px;
+}
+
+.progressDemo {
+  width: min(100%, 430px);
+  display: grid;
+  gap: 12px;
+}
+
+.progressDemo > div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.progressDemo progress {
+  width: 100%;
+  height: 12px;
+  accent-color: #526f00;
+}
+
+.progressDemo button,
+.skeletonDemo > button {
+  justify-self: start;
+  padding: 8px 12px;
+  border: 1px solid rgba(12, 13, 13, 0.24);
+  background: white;
+}
+
+.skeletonDemo {
+  width: min(100%, 430px);
+  display: grid;
+  gap: 16px;
+}
+
+.skeletonDemo > div:first-child {
+  min-height: 95px;
+}
+
+.skeletonDemo i {
+  display: block;
+  height: 14px;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #deded8, #f4f3ee, #deded8);
+  background-size: 200% 100%;
+  animation: skeleton-shine 1.2s linear infinite;
+}
+
+.skeletonDemo i:first-child {
+  width: 48%;
+  height: 22px;
+}
+
+.skeletonDemo i:last-child {
+  width: 72%;
+}
+
+.skeletonDemo p {
+  color: rgba(12, 13, 13, 0.58);
+  font-size: 12px;
+}
+
+@keyframes skeleton-shine {
+  to { background-position: -200% 0; }
+}
+
+.alertDemo {
+  width: min(100%, 500px);
+  display: grid;
+  grid-template-columns: 28px 1fr 28px;
+  gap: 12px;
+  align-items: start;
+  padding: 15px;
+  border: 1px solid #c89322;
+  background: #fff4d2;
+}
+
+.alertDemo > span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #9d6900;
+  color: white;
+  font-weight: 700;
+}
+
+.alertDemo p {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+}
+
+.alertDemo small {
+  color: rgba(12, 13, 13, 0.58);
+}
+
+.alertDemo button {
+  border: 0;
+  background: transparent;
+  font-size: 18px;
+}
+
+.toastDemo {
+  width: 100%;
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+}
+
+.toastDemo > div {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 11px 14px;
+  box-shadow: 0 10px 30px rgba(12, 13, 13, 0.18);
+  background: var(--ink);
+  color: white;
+  font-size: 12px;
+}
+
+.overlayDemo {
+  width: 100%;
+  min-height: 130px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+}
+
+.modalBackdrop,
+.drawerBackdrop {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(12, 13, 13, 0.58);
+}
+
+.modalBackdrop > div {
+  width: min(100%, 360px);
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(12, 13, 13, 0.28);
+  background: white;
+}
+
+.modalBackdrop p,
+.drawerBackdrop p {
+  color: rgba(12, 13, 13, 0.58);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.drawerBackdrop {
+  place-items: stretch end;
+  padding: 0;
+}
+
+.drawerBackdrop aside {
+  width: min(82%, 360px);
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  background: white;
+}
+
+.drawerBackdrop aside > button {
+  align-self: end;
+  border: 0;
+  background: transparent;
+  font-size: 20px;
+}
+
+.drawerBackdrop aside > span {
+  margin-top: auto;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+}
+
+.drawerBackdrop aside > strong {
+  margin-top: 8px;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.tooltipDemo {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+}
+
+.tooltipDemo > span {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  padding: 7px 9px;
+  opacity: 0;
+  transform: translateY(4px);
+  background: var(--ink);
+  color: white;
+  font-size: 10px;
+  pointer-events: none;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.tooltipDemo:has(button:hover) > span,
+.tooltipDemo:has(button:focus-visible) > span {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltipDemo button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--ink);
+  background: white;
+}
+
+.tooltipDemo small {
+  color: rgba(12, 13, 13, 0.52);
+  font-size: 10px;
+}
+
+.popconfirmDemo {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.popconfirmDemo > div {
+  position: absolute;
+  z-index: 2;
+  bottom: calc(100% + 10px);
+  width: 230px;
+  padding: 14px;
+  box-shadow: 0 15px 40px rgba(12, 13, 13, 0.22);
+  background: white;
+}
+
+.popconfirmDemo > div p,
+.popconfirmDemo > p {
+  margin: 7px 0 12px;
+  color: rgba(12, 13, 13, 0.56);
+  font-size: 11px;
+}
+
+.popconfirmDemo > div button:not(.demoDanger) {
+  min-height: 36px;
+  padding: 0 11px;
+  border: 1px solid rgba(12, 13, 13, 0.2);
+  background: white;
+}
+
+.paginationDemo {
+  display: flex;
+  gap: 6px;
+}
+
+.paginationDemo button {
+  min-width: 38px;
+  height: 38px;
+  border: 1px solid rgba(12, 13, 13, 0.2);
+  background: white;
+}
+
+.paginationDemo button[aria-current="page"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: white;
+}
+
+.stepsDemo {
+  width: min(100%, 500px);
+  display: grid;
+  gap: 24px;
+}
+
+.stepsDemo ol {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepsDemo li {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  color: rgba(12, 13, 13, 0.4);
+}
+
+.stepsDemo li::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 14px;
+  right: 50%;
+  left: -50%;
+  height: 1px;
+  background: rgba(12, 13, 13, 0.2);
+}
+
+.stepsDemo li:first-child::before {
+  display: none;
+}
+
+.stepsDemo li[data-active="true"] {
+  color: var(--ink);
+}
+
+.stepsDemo li[data-active="true"]::before {
+  background: #526f00;
+}
+
+.stepsDemo li span {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #dad9d2;
+  font-size: 10px;
+}
+
+.stepsDemo li[data-active="true"] span {
+  background: #526f00;
+  color: white;
+}
+
+.stepsDemo small {
+  font-size: 10px;
+}
+
+.dropdownDemo {
+  position: relative;
+  align-self: flex-start;
+}
+
+.dropdownDemo > button {
+  min-height: 42px;
+  padding: 0 15px;
+  border: 1px solid var(--ink);
+  background: white;
+}
+
+.dropdownDemo > div {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 150px;
+  display: grid;
+  padding: 5px;
+  box-shadow: 0 12px 36px rgba(12, 13, 13, 0.2);
+  background: white;
+}
+
+.dropdownDemo > div button {
+  padding: 9px 10px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.dropdownDemo > div button:hover {
+  background: var(--mint);
+}
+
+.searchDemo {
+  width: min(100%, 430px);
+  display: grid;
+  gap: 9px;
+}
+
+.searchDemo ul {
+  max-height: 105px;
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 1px;
+  overflow-y: auto;
+  background: rgba(12, 13, 13, 0.12);
+  list-style: none;
+}
+
+.searchDemo li {
+  padding: 8px 10px;
+  background: white;
+  font-size: 11px;
+}
+
+.searchDemo small {
+  color: rgba(12, 13, 13, 0.5);
+  font-size: 10px;
+}
+
+.practice {
+  margin-top: 48px;
+  padding: 28px;
+  border: 1px solid rgba(217, 255, 67, 0.3);
+  background: rgba(217, 255, 67, 0.045);
+}
+
+.practice > span {
+  color: var(--acid);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.09em;
+}
+
+.practice h3 {
+  max-width: 850px;
+  margin: 14px 0 22px;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.practice > div {
+  display: grid;
+  gap: 8px;
+}
+
+.practice > div button {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: #0c0d0d;
+  color: var(--paper);
+  text-align: left;
+  cursor: pointer;
+}
+
+.practice > div button:hover,
+.practice > div button[aria-pressed="true"] {
+  border-color: var(--acid);
+}
+
+.practice > div button[data-result="correct"] {
+  border-color: var(--mint);
+  background: rgba(182, 241, 223, 0.09);
+}
+
+.practice > div button[data-result="wrong"] {
+  border-color: #d16a5d;
+  background: rgba(209, 106, 93, 0.08);
+}
+
+.practice > div i {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  font-style: normal;
+}
+
+.practice > div span {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.practiceFeedback {
+  display: grid;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 15px;
+  background: rgba(242, 239, 232, 0.07);
+  color: rgba(242, 239, 232, 0.66);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.practiceFeedback strong {
+  color: var(--acid);
+}
+
 .catalog {
   scroll-margin-top: 28px;
   margin-top: 64px;
@@ -920,7 +1959,8 @@
 
   .hero,
   .sectionHeading,
-  .homeSpotlightInner {
+  .homeSpotlightInner,
+  .demoGalleryHeader {
     grid-template-columns: 1fr;
   }
 
@@ -966,7 +2006,8 @@
   }
 
   .usageGrid,
-  .companionGrid {
+  .companionGrid,
+  .demoGalleryGrid {
     grid-template-columns: 1fr;
   }
 
@@ -1061,6 +2102,25 @@
     min-height: 54px;
   }
 
+  .demoCard {
+    min-height: 360px;
+    padding: 18px;
+  }
+
+  .demoCardTitle {
+    flex-direction: column;
+  }
+
+  .termDemo,
+  .termDemoCompact {
+    min-height: 200px;
+    padding: 18px 14px;
+  }
+
+  .practice {
+    padding: 20px 16px;
+  }
+
   .lesson {
     padding: 26px 20px;
   }
@@ -1111,7 +2171,13 @@
   .taxonomyCard,
   .companionGrid a,
   .results button,
-  .quickTerms button {
+  .quickTerms button,
+  .switchDemo > button span,
+  .tooltipDemo > span {
     transition: none;
+  }
+
+  .skeletonDemo i {
+    animation: none;
   }
 }

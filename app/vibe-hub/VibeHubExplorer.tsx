@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { vibeTerms } from "./catalog";
+import { interactiveDemoGroups, TermDemo } from "./TermDemos";
 import styles from "./VibeHub.module.css";
 
 const API_BASE = "https://vibe-hub.org/api/agent/v1";
@@ -28,7 +29,16 @@ type FlowStep = {
 type Lesson = SearchResult & {
   description?: string;
   aliases?: string[];
-  distinctions?: Array<string | { title?: string; description?: string }>;
+  distinctions?: Array<
+    | string
+    | {
+        title?: string;
+        description?: string;
+        label?: string;
+        explanation?: string;
+        target?: { id?: string; title?: string; url?: string };
+      }
+  >;
   usage?: {
     use?: string[];
     avoid?: string[];
@@ -41,6 +51,10 @@ type Lesson = SearchResult & {
     boundary?: string;
     agentPrompt?: string;
     steps?: FlowStep[];
+  } | null;
+  lessonPractice?: {
+    title: string;
+    options: Array<{ label: string; feedback: string; correct: boolean }>;
   } | null;
   references?: Array<{ title: string; source?: string; url: string }>;
 };
@@ -67,9 +81,20 @@ const macroFilters = [
   { id: "design", label: "设计风格", count: 24 },
 ];
 
-function readableItem(value: string | { title?: string; description?: string }) {
+function readableItem(
+  value:
+    | string
+    | {
+        title?: string;
+        description?: string;
+        label?: string;
+        explanation?: string;
+      },
+) {
   if (typeof value === "string") return value;
-  return [value.title, value.description].filter(Boolean).join("：");
+  return [value.title || value.label, value.description || value.explanation]
+    .filter(Boolean)
+    .join("：");
 }
 
 export function VibeHubExplorer() {
@@ -77,18 +102,24 @@ export function VibeHubExplorer() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [activeMacro, setActiveMacro] = useState("all");
+  const [activeDemoGroup, setActiveDemoGroup] = useState("button-link");
+  const [practiceChoice, setPracticeChoice] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
   const [message, setMessage] = useState("输入中文、英文或一句口语描述，每次返回最相关的 5 个术语。");
 
   async function loadLesson(id: string) {
     setDetailLoading(true);
+    setPracticeChoice(null);
     setMessage("");
     try {
       const response = await fetch(`${API_BASE}/lessons/${encodeURIComponent(id)}`);
       if (!response.ok) throw new Error("详情暂时不可用");
       const payload = await response.json();
       setLesson(payload.data as Lesson);
+      window.setTimeout(() => {
+        document.getElementById("lesson-detail")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
     } catch {
       setMessage("暂时无法读取术语详情，请稍后重试或访问原站。 ");
     } finally {
@@ -133,6 +164,8 @@ export function VibeHubExplorer() {
     : [];
 
   const catalogQuery = query.trim().toLocaleLowerCase();
+  const currentDemoGroup =
+    interactiveDemoGroups.find((group) => group.id === activeDemoGroup) || interactiveDemoGroups[0];
   const visibleTerms = vibeTerms.filter((term) => {
     const matchesMacro = activeMacro === "all" || term.macro === activeMacro;
     const matchesQuery =
@@ -176,6 +209,44 @@ export function VibeHubExplorer() {
             <small>{item.note}</small>
           </button>
         ))}
+      </div>
+
+      <div className={styles.demoGallery} id="interactive-demos">
+        <div className={styles.demoGalleryHeader}>
+          <div>
+            <span>PLAYGROUND / 可操作组件图鉴</span>
+            <h3>不只解释，直接动手试</h3>
+          </div>
+          <p>按钮、输入框、弹窗等控件都能现场操作；演示只改变当前页面状态，不会提交或保存真实数据。</p>
+        </div>
+        <div className={styles.demoGroupTabs} role="tablist" aria-label="交互组件分类">
+          {interactiveDemoGroups.map((group) => (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeDemoGroup === group.id}
+              onClick={() => setActiveDemoGroup(group.id)}
+              key={group.id}
+            >
+              {group.label}
+              <small>{group.terms.length}</small>
+            </button>
+          ))}
+        </div>
+        <div className={styles.demoGalleryGrid} role="tabpanel">
+          {currentDemoGroup.terms.map((term) => (
+            <article className={styles.demoCard} key={term.id}>
+              <div className={styles.demoCardTitle}>
+                <span>{term.secondaryTitle}</span>
+                <button type="button" onClick={() => loadLesson(term.id)}>
+                  {term.title} <i aria-hidden="true">↘</i>
+                </button>
+              </div>
+              <p>{term.prompt}</p>
+              <TermDemo termId={term.id} compact />
+            </article>
+          ))}
+        </div>
       </div>
 
       <div className={styles.catalog} id="catalog">
@@ -231,7 +302,7 @@ export function VibeHubExplorer() {
       {detailLoading ? <p className={styles.statusMessage}>正在读取术语详情…</p> : null}
 
       {lesson ? (
-        <article className={styles.lesson} aria-labelledby="lesson-title">
+        <article className={styles.lesson} id="lesson-detail" aria-labelledby="lesson-title">
           <div className={styles.lessonTopline}>
             <span>{lesson.macroCategory} / {lesson.category}</span>
             <a href={lesson.url} target="_blank" rel="noreferrer">查看原文 ↗</a>
@@ -242,6 +313,38 @@ export function VibeHubExplorer() {
           </h2>
           <p className={styles.lessonLead}>{lesson.tagline}</p>
           {lesson.description ? <p className={styles.lessonDescription}>{lesson.description}</p> : null}
+
+          <TermDemo termId={lesson.id} />
+
+          {lesson.lessonPractice?.options?.length ? (
+            <section className={styles.practice} aria-labelledby="practice-title">
+              <span>JUDGMENT PRACTICE / 选择题</span>
+              <h3 id="practice-title">{lesson.lessonPractice.title}</h3>
+              <div>
+                {lesson.lessonPractice.options.map((option, index) => {
+                  const selected = practiceChoice === index;
+                  return (
+                    <button
+                      type="button"
+                      aria-pressed={selected}
+                      data-result={selected ? (option.correct ? "correct" : "wrong") : undefined}
+                      onClick={() => setPracticeChoice(index)}
+                      key={`${lesson.id}-practice-${index}`}
+                    >
+                      <i>{String.fromCharCode(65 + index)}</i>
+                      <span>{option.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {practiceChoice !== null ? (
+                <p className={styles.practiceFeedback} aria-live="polite">
+                  <strong>{lesson.lessonPractice.options[practiceChoice].correct ? "回答正确" : "再想一步"}</strong>
+                  {lesson.lessonPractice.options[practiceChoice].feedback}
+                </p>
+              ) : null}
+            </section>
+          ) : null}
 
           {lesson.flowLesson?.steps?.length ? (
             <section className={styles.flow}>
