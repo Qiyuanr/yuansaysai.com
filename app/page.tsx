@@ -1,5 +1,6 @@
 import { ParticleField } from "./ParticleField";
 import { importedNotes } from "./notes/generated";
+import vibeStyles from "./vibe-hub/VibeHub.module.css";
 
 const notes = [
   {
@@ -175,6 +176,7 @@ export default function Home() {
         </a>
         <nav aria-label="主导航">
           <a href="#notes">专栏</a>
+          <a href="/vibe-hub">术语图鉴</a>
           <a href="#experiments">功能</a>
           <a href="#about">关于</a>
         </nav>
@@ -227,6 +229,31 @@ export default function Home() {
           <em>Not intimidating.</em>
         </p>
         <span>AI 不该让人焦虑，它应该帮普通人解决问题。</span>
+      </section>
+
+      <section className={`${vibeStyles.homeSpotlight} section-shell`} id="vibe-hub">
+        <p className="section-kicker">NEW SECTION / VIBE CODING</p>
+        <div className={vibeStyles.homeSpotlightInner}>
+          <h2>
+            Vibe Coding
+            <br />
+            <em>术语图鉴</em>
+          </h2>
+          <div className={vibeStyles.homeSpotlightCopy}>
+            <p>
+              不知道“那个弹出来的小框”叫什么？把口语描述变成准确术语，
+              再把需求直接交给 Agent。
+            </p>
+            <div aria-label="板块规模">
+              <span>250 个术语</span>
+              <span>7 大分类</span>
+              <span>实时查询</span>
+            </div>
+            <a className="button" href="/vibe-hub">
+              打开术语图鉴 <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
       </section>
 
       <section className="notes section-shell" id="notes">
