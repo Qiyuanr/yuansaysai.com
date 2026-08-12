@@ -417,18 +417,18 @@
 
 .demoCard {
   min-width: 0;
-  min-height: 390px;
+  min-height: 410px;
   display: flex;
   flex-direction: column;
-  padding: 24px;
-  background: #111313;
+  padding: 26px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(217, 255, 67, 0.035), transparent 32%),
+    #111313;
 }
 
 .demoCardTitle {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
+  display: grid;
+  gap: 9px;
 }
 
 .demoCardTitle > span {
@@ -439,15 +439,18 @@
 }
 
 .demoCardTitle > button {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 18px;
   padding: 0;
   border: 0;
   background: transparent;
   color: var(--paper);
   font-family: Georgia, "Songti SC", serif;
-  font-size: 30px;
+  font-size: 32px;
+  text-align: left;
   cursor: pointer;
 }
 
@@ -462,7 +465,8 @@
 }
 
 .demoCard > p {
-  margin: 14px 0 24px;
+  max-width: 430px;
+  margin: 12px 0 25px;
   color: rgba(242, 239, 232, 0.52);
   font-size: 12px;
   line-height: 1.65;
@@ -470,26 +474,47 @@
 
 .termDemo {
   position: relative;
-  min-height: 210px;
+  min-height: 260px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 48px;
-  padding: 30px;
+  padding: 52px 32px 30px;
   overflow: hidden;
-  border: 1px solid rgba(12, 13, 13, 0.14);
+  border: 1px solid rgba(12, 13, 13, 0.12);
+  border-radius: 16px;
   background:
     linear-gradient(rgba(12, 13, 13, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(12, 13, 13, 0.035) 1px, transparent 1px),
     var(--paper);
   background-size: 24px 24px;
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.12),
+    inset 0 1px rgba(255, 255, 255, 0.8);
   color: var(--ink);
 }
 
+.termDemo::before {
+  content: "LIVE DEMO";
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  left: 16px;
+  padding: 5px 8px;
+  border: 1px solid rgba(12, 13, 13, 0.13);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: rgba(12, 13, 13, 0.48);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  letter-spacing: 0.09em;
+  backdrop-filter: blur(8px);
+}
+
 .termDemoCompact {
-  min-height: 205px;
+  min-height: 225px;
   margin-top: auto;
-  padding: 20px;
+  padding: 48px 22px 24px;
 }
 
 .termDemo button,
@@ -508,7 +533,31 @@
 }
 
 .termDemo button {
+  appearance: none;
+  border-radius: 9px;
   cursor: pointer;
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.termDemo button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.termDemo button:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.termDemo button:focus-visible,
+.termDemo a:focus-visible,
+.termDemo input:focus-visible,
+.termDemo textarea:focus-visible,
+.termDemo select:focus-visible {
+  outline: 3px solid rgba(82, 111, 0, 0.28);
+  outline-offset: 3px;
 }
 
 .termDemo button:disabled {
@@ -522,12 +571,20 @@
   gap: 10px;
 }
 
+.buttonDemo {
+  width: min(100%, 410px);
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+}
+
 .demoPrimary,
 .demoSecondary,
 .demoDanger {
-  min-height: 43px;
-  padding: 0 18px;
+  min-height: 46px;
+  padding: 0 20px;
   border: 1px solid var(--ink);
+  box-shadow: 0 8px 20px rgba(12, 13, 13, 0.08);
   font-weight: 650;
 }
 
@@ -548,9 +605,23 @@
 }
 
 .demoStatus {
-  margin: 16px 0 0;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(12, 13, 13, 0.055);
   color: rgba(12, 13, 13, 0.56);
   font-size: 11px;
+}
+
+.demoStatus i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6b8f08;
 }
 
 .demoLinkCopy {
@@ -592,9 +663,17 @@
   min-height: 44px;
   padding: 10px 12px;
   border: 1px solid rgba(12, 13, 13, 0.22);
-  border-radius: 0;
+  border-radius: 10px;
   background: white;
+  box-shadow: 0 8px 24px rgba(12, 13, 13, 0.055);
   color: var(--ink);
+}
+
+.demoField input:not([type="range"]):focus,
+.demoField textarea:focus,
+.demoField select:focus,
+.searchDemo input:focus {
+  border-color: #6b8f08;
 }
 
 .demoField textarea {
@@ -630,7 +709,10 @@
   display: grid;
   grid-template-columns: 42px 82px 42px;
   border: 1px solid rgba(12, 13, 13, 0.24);
+  border-radius: 11px;
+  overflow: hidden;
   background: white;
+  box-shadow: 0 10px 28px rgba(12, 13, 13, 0.08);
 }
 
 .numberDemo button,
@@ -755,7 +837,9 @@
 .uploadDemo label {
   padding: 13px 18px;
   border: 1px dashed rgba(12, 13, 13, 0.4);
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 8px 24px rgba(12, 13, 13, 0.05);
   font-size: 12px;
   cursor: pointer;
 }
@@ -774,27 +858,35 @@
 
 .tabsDemo > div {
   display: flex;
-  border-bottom: 1px solid rgba(12, 13, 13, 0.2);
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(12, 13, 13, 0.13);
+  border-radius: 11px 11px 0 0;
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .tabsDemo button {
   padding: 10px 14px;
   border: 0;
-  border-bottom: 2px solid transparent;
+  border-radius: 7px;
   background: transparent;
   color: rgba(12, 13, 13, 0.55);
 }
 
 .tabsDemo button[aria-selected="true"] {
-  border-color: #526f00;
-  color: var(--ink);
+  background: var(--ink);
+  box-shadow: 0 6px 16px rgba(12, 13, 13, 0.12);
   font-weight: 650;
+  color: white;
 }
 
 .tabsDemo p {
   min-height: 72px;
   margin: 0;
   padding: 18px 14px;
+  border: 1px solid rgba(12, 13, 13, 0.1);
+  border-top: 0;
+  border-radius: 0 0 11px 11px;
   background: rgba(255, 255, 255, 0.52);
   font-size: 13px;
 }
@@ -802,7 +894,10 @@
 .collapseDemo {
   width: min(100%, 460px);
   border: 1px solid rgba(12, 13, 13, 0.2);
+  border-radius: 11px;
+  overflow: hidden;
   background: white;
+  box-shadow: 0 10px 28px rgba(12, 13, 13, 0.07);
 }
 
 .collapseDemo > button {
@@ -840,6 +935,7 @@
 .carouselDemo > button {
   border: 1px solid rgba(12, 13, 13, 0.18);
   background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 6px 16px rgba(12, 13, 13, 0.06);
 }
 
 .carouselDemo > div {
@@ -848,7 +944,9 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 15px;
+  border-radius: 11px;
   background: var(--mint);
+  box-shadow: 0 10px 28px rgba(12, 13, 13, 0.07);
 }
 
 .carouselDemo span {
@@ -906,9 +1004,11 @@
 .progressDemo button,
 .skeletonDemo > button {
   justify-self: start;
-  padding: 8px 12px;
+  min-height: 38px;
+  padding: 0 14px;
   border: 1px solid rgba(12, 13, 13, 0.24);
   background: white;
+  box-shadow: 0 6px 16px rgba(12, 13, 13, 0.055);
 }
 
 .skeletonDemo {
@@ -956,7 +1056,9 @@
   align-items: start;
   padding: 15px;
   border: 1px solid #c89322;
+  border-radius: 11px;
   background: #fff4d2;
+  box-shadow: 0 10px 28px rgba(117, 77, 0, 0.1);
 }
 
 .alertDemo > span {
@@ -998,6 +1100,7 @@
   top: 14px;
   right: 14px;
   padding: 11px 14px;
+  border-radius: 9px;
   box-shadow: 0 10px 30px rgba(12, 13, 13, 0.18);
   background: var(--ink);
   color: white;
@@ -1021,11 +1124,13 @@
   place-items: center;
   padding: 20px;
   background: rgba(12, 13, 13, 0.58);
+  backdrop-filter: blur(4px);
 }
 
 .modalBackdrop > div {
   width: min(100%, 360px);
   padding: 22px;
+  border-radius: 14px;
   box-shadow: 0 20px 60px rgba(12, 13, 13, 0.28);
   background: white;
 }
@@ -1047,7 +1152,9 @@
   display: flex;
   flex-direction: column;
   padding: 22px;
+  border-radius: 14px 0 0 14px;
   background: white;
+  box-shadow: -20px 0 60px rgba(12, 13, 13, 0.2);
 }
 
 .drawerBackdrop aside > button {
@@ -1081,6 +1188,7 @@
   position: absolute;
   bottom: calc(100% + 8px);
   padding: 7px 9px;
+  border-radius: 7px;
   opacity: 0;
   transform: translateY(4px);
   background: var(--ink);
@@ -1101,6 +1209,7 @@
   height: 44px;
   border: 1px solid var(--ink);
   background: white;
+  box-shadow: 0 8px 22px rgba(12, 13, 13, 0.08);
 }
 
 .tooltipDemo small {
@@ -1109,33 +1218,114 @@
 }
 
 .popconfirmDemo {
-  position: relative;
-  display: grid;
-  place-items: center;
+  width: min(100%, 360px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.popconfirmDemo > div {
-  position: absolute;
-  z-index: 2;
-  bottom: calc(100% + 10px);
-  width: 230px;
-  padding: 14px;
-  box-shadow: 0 15px 40px rgba(12, 13, 13, 0.22);
+.popconfirmAnchor {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.popconfirmBubble {
+  position: relative;
+  width: min(100%, 310px);
+  padding: 17px;
+  border: 1px solid rgba(12, 13, 13, 0.13);
+  border-radius: 12px;
+  box-shadow: 0 18px 46px rgba(12, 13, 13, 0.16);
   background: white;
 }
 
-.popconfirmDemo > div p,
-.popconfirmDemo > p {
-  margin: 7px 0 12px;
+.popconfirmBubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid rgba(12, 13, 13, 0.13);
+  border-bottom: 1px solid rgba(12, 13, 13, 0.13);
+  background: white;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.popconfirmBubble > strong {
+  display: block;
+  font-size: 13px;
+}
+
+.popconfirmBubble > p {
+  margin: 7px 0 15px;
   color: rgba(12, 13, 13, 0.56);
   font-size: 11px;
+  line-height: 1.55;
 }
 
-.popconfirmDemo > div button:not(.demoDanger) {
-  min-height: 36px;
-  padding: 0 11px;
+.popconfirmBubble .demoActions {
+  justify-content: flex-end;
+}
+
+.popconfirmBubble button:not(.demoDanger),
+.stepsDemo .demoActions button,
+.modalBackdrop .demoActions button:not(.demoPrimary) {
+  min-height: 38px;
+  padding: 0 13px;
   border: 1px solid rgba(12, 13, 13, 0.2);
   background: white;
+}
+
+.popconfirmBubble .demoDanger {
+  min-height: 38px;
+  padding: 0 13px;
+}
+
+.popconfirmResult {
+  width: min(100%, 330px);
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid rgba(82, 111, 0, 0.22);
+  border-radius: 12px;
+  background: rgba(182, 241, 223, 0.48);
+}
+
+.popconfirmResult > span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #526f00;
+  color: white;
+}
+
+.popconfirmResult p {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+}
+
+.popconfirmResult small {
+  color: rgba(12, 13, 13, 0.52);
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.popconfirmResult button {
+  grid-column: 2;
+  justify-self: start;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(12, 13, 13, 0.18);
+  background: white;
+  font-size: 10px;
 }
 
 .paginationDemo {
@@ -1148,6 +1338,7 @@
   height: 38px;
   border: 1px solid rgba(12, 13, 13, 0.2);
   background: white;
+  box-shadow: 0 5px 14px rgba(12, 13, 13, 0.05);
 }
 
 .paginationDemo button[aria-current="page"] {
@@ -1222,6 +1413,10 @@
   font-size: 10px;
 }
 
+.stepsDemo .demoActions {
+  justify-content: center;
+}
+
 .dropdownDemo {
   position: relative;
   align-self: flex-start;
@@ -1232,6 +1427,7 @@
   padding: 0 15px;
   border: 1px solid var(--ink);
   background: white;
+  box-shadow: 0 8px 22px rgba(12, 13, 13, 0.07);
 }
 
 .dropdownDemo > div {
@@ -1242,6 +1438,8 @@
   min-width: 150px;
   display: grid;
   padding: 5px;
+  border: 1px solid rgba(12, 13, 13, 0.1);
+  border-radius: 10px;
   box-shadow: 0 12px 36px rgba(12, 13, 13, 0.2);
   background: white;
 }
@@ -1270,6 +1468,7 @@
   margin: 0;
   padding: 1px;
   overflow-y: auto;
+  border-radius: 9px;
   background: rgba(12, 13, 13, 0.12);
   list-style: none;
 }
@@ -1278,6 +1477,14 @@
   padding: 8px 10px;
   background: white;
   font-size: 11px;
+}
+
+.searchDemo li:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.searchDemo li:last-child {
+  border-radius: 0 0 8px 8px;
 }
 
 .searchDemo small {

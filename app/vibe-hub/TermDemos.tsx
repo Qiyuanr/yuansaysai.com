@@ -132,13 +132,13 @@ export function TermDemo({ termId, compact = false }: { termId: string; compact?
   switch (termId) {
     case "button":
       content = (
-        <>
+        <div className={styles.buttonDemo}>
           <div className={styles.demoActions}>
             <button className={styles.demoPrimary} type="button" onClick={() => setActionMessage("演示：已触发保存动作，不会保存真实数据")}>保存</button>
             <button className={styles.demoSecondary} type="button" onClick={() => setActionMessage("演示：已取消本次修改")}>取消</button>
           </div>
-          <p className={styles.demoStatus} aria-live="polite">{actionMessage}</p>
-        </>
+          <p className={styles.demoStatus} aria-live="polite"><i aria-hidden="true" />{actionMessage}</p>
+        </div>
       );
       break;
     case "link":
@@ -351,8 +351,27 @@ export function TermDemo({ termId, compact = false }: { termId: string; compact?
     case "popconfirm":
       content = (
         <div className={styles.popconfirmDemo}>
-          {deleted ? <p role="status">演示：项目已从列表移除</p> : <button className={styles.demoDanger} type="button" onClick={() => setConfirmOpen(true)}>删除项目</button>}
-          {confirmOpen && !deleted ? <div role="dialog" aria-label="确认删除"><strong>确定删除吗？</strong><p>此操作无法撤销。</p><div className={styles.demoActions}><button type="button" onClick={() => setConfirmOpen(false)}>取消</button><button className={styles.demoDanger} type="button" onClick={() => { setConfirmOpen(false); setDeleted(true); }}>删除</button></div></div> : null}
+          {deleted ? (
+            <div className={styles.popconfirmResult} role="status">
+              <span aria-hidden="true">✓</span>
+              <p><strong>项目已删除</strong><small>这里只改变演示状态，没有删除真实内容。</small></p>
+              <button type="button" onClick={() => setDeleted(false)}>重新演示</button>
+            </div>
+          ) : (
+            <div className={styles.popconfirmAnchor}>
+              {confirmOpen ? (
+                <div className={styles.popconfirmBubble} role="dialog" aria-label="确认删除">
+                  <strong>确定删除这个项目？</strong>
+                  <p>删除后无法恢复，请确认是否继续。</p>
+                  <div className={styles.demoActions}>
+                    <button type="button" onClick={() => setConfirmOpen(false)}>取消</button>
+                    <button className={styles.demoDanger} type="button" onClick={() => { setConfirmOpen(false); setDeleted(true); }}>确认删除</button>
+                  </div>
+                </div>
+              ) : null}
+              <button className={styles.demoDanger} type="button" aria-expanded={confirmOpen} onClick={() => setConfirmOpen(true)}>删除项目</button>
+            </div>
+          )}
         </div>
       );
       break;
