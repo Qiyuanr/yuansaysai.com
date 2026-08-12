@@ -97,7 +97,7 @@ export default function VibeHubPage() {
             <span>大分类</span>
           </div>
           <div>
-            <strong>29</strong>
+            <strong>50</strong>
             <span>可操作示例</span>
           </div>
         </div>

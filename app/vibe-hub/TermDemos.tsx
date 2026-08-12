@@ -84,6 +84,352 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
 
+const visualTermIds = new Set([
+  "border-radius",
+  "shadow",
+  "opacity",
+  "gradient",
+  "corner-feel",
+  "backdrop-blur",
+  "style-glass",
+  "dark-mode",
+  "design-token",
+  "transition",
+  "animation",
+  "easing",
+  "spring",
+  "fade",
+  "hover",
+  "active",
+  "focus",
+  "drag",
+  "disabled",
+  "cursor",
+  "selection",
+]);
+
+function VisualEffectDemo({ termId }: { termId: string }) {
+  const [radius, setRadius] = useState(18);
+  const [blur, setBlur] = useState(14);
+  const [shadowDepth, setShadowDepth] = useState(2);
+  const [opacity, setOpacity] = useState(72);
+  const [gradientAngle, setGradientAngle] = useState(125);
+  const [dark, setDark] = useState(true);
+  const [tokenAccent, setTokenAccent] = useState<"magenta" | "blue">("magenta");
+  const [tokenRound, setTokenRound] = useState(true);
+  const [motionOn, setMotionOn] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [fadeVisible, setFadeVisible] = useState(true);
+  const [dragged, setDragged] = useState(false);
+
+  const shadowLevels = [
+    "none",
+    "0 8px 18px rgba(12, 13, 13, 0.12)",
+    "0 18px 40px rgba(12, 13, 13, 0.2)",
+    "0 30px 70px rgba(12, 13, 13, 0.3)",
+  ];
+
+  switch (termId) {
+    case "border-radius":
+      return (
+        <div className={styles.radiusDemo}>
+          <div className={styles.visualDemoHeading}>
+            <span>拖动半径</span>
+            <strong>{radius}px</strong>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="48"
+            value={radius}
+            aria-label="调整圆角半径"
+            onInput={(event) => setRadius(Number(event.currentTarget.value))}
+          />
+          <article style={{ borderRadius: `${radius}px` }}>
+            <span>PROJECT 07</span>
+            <strong>同一张卡片，不同的边缘感</strong>
+            <button type="button" style={{ borderRadius: `${Math.min(radius, 24)}px` }}>查看详情</button>
+          </article>
+        </div>
+      );
+    case "corner-feel":
+      return (
+        <div className={styles.cornerFeelDemo}>
+          {[
+            ["直角", "克制、硬朗", 0],
+            ["小圆角", "理性、清楚", 6],
+            ["大圆角", "柔和、亲近", 20],
+            ["胶囊", "轻快、强调操作", 999],
+          ].map(([label, feeling, value]) => (
+            <article style={{ borderRadius: `${value}px` }} key={label as string}>
+              <span>{value === 999 ? "PILL" : `${value}px`}</span>
+              <strong>{label}</strong>
+              <small>{feeling}</small>
+              <button type="button" style={{ borderRadius: `${value}px` }}>按钮</button>
+            </article>
+          ))}
+        </div>
+      );
+    case "backdrop-blur":
+    case "style-glass":
+      return (
+        <div className={styles.glassDemo}>
+          <div className={styles.visualDemoHeading}>
+            <span>{termId === "style-glass" ? "玻璃拟态" : "背景模糊"}</span>
+            <strong>blur({blur}px)</strong>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="28"
+            value={blur}
+            aria-label="调整毛玻璃模糊强度"
+            onInput={(event) => setBlur(Number(event.currentTarget.value))}
+          />
+          <div className={styles.glassStage}>
+            <i aria-hidden="true" />
+            <i aria-hidden="true" />
+            <article
+              style={{
+                backdropFilter: `blur(${blur}px)`,
+                WebkitBackdropFilter: `blur(${blur}px)`,
+              }}
+            >
+              <span>山居民宿 · 云顶</span>
+              <strong>背景仍有轮廓，文字保持清楚</strong>
+              <small>半透明底色 + backdrop-filter</small>
+            </article>
+          </div>
+        </div>
+      );
+    case "shadow":
+      return (
+        <div className={styles.shadowDemo}>
+          <div className={styles.visualDemoHeading}>
+            <span>层级深度</span>
+            <strong>Level {shadowDepth}</strong>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="3"
+            value={shadowDepth}
+            aria-label="调整阴影层级"
+            onInput={(event) => setShadowDepth(Number(event.currentTarget.value))}
+          />
+          <article style={{ boxShadow: shadowLevels[shadowDepth] }}>
+            <span>ELEVATION</span>
+            <strong>{shadowDepth ? "卡片从背景上浮起" : "没有阴影时层级变弱"}</strong>
+          </article>
+        </div>
+      );
+    case "opacity":
+      return (
+        <div className={styles.opacityDemo}>
+          <div className={styles.visualDemoHeading}>
+            <span>前景透明度</span>
+            <strong>{opacity}%</strong>
+          </div>
+          <input
+            type="range"
+            min="10"
+            max="100"
+            value={opacity}
+            aria-label="调整透明度"
+            onInput={(event) => setOpacity(Number(event.currentTarget.value))}
+          />
+          <div>
+            <span aria-hidden="true">BACKGROUND</span>
+            <article style={{ opacity: opacity / 100 }}>
+              <strong>前景图层</strong>
+              <small>透明度会同时影响文字与背景</small>
+            </article>
+          </div>
+        </div>
+      );
+    case "gradient":
+      return (
+        <div className={styles.gradientDemo}>
+          <div className={styles.visualDemoHeading}>
+            <span>渐变方向</span>
+            <strong>{gradientAngle}°</strong>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="360"
+            value={gradientAngle}
+            aria-label="调整渐变方向"
+            onInput={(event) => setGradientAngle(Number(event.currentTarget.value))}
+          />
+          <article
+            style={{
+              background: `linear-gradient(${gradientAngle}deg, #ff2bd6, #752cff 48%, #2ad9ff)`,
+            }}
+          >
+            <span>LINEAR GRADIENT</span>
+            <strong>颜色沿指定方向平滑过渡</strong>
+          </article>
+        </div>
+      );
+    case "dark-mode":
+      return (
+        <div className={styles.darkModeDemo} data-dark={dark}>
+          <div className={styles.visualDemoHeading}>
+            <span>主题预览</span>
+            <button type="button" onClick={() => setDark((value) => !value)}>
+              {dark ? "切换浅色" : "切换深色"}
+            </button>
+          </div>
+          <article>
+            <span>{dark ? "NIGHT MODE" : "DAY MODE"}</span>
+            <strong>不是简单反色，而是重新组织层级与对比度</strong>
+            <div><i /><i /><i /></div>
+          </article>
+        </div>
+      );
+    case "design-token":
+      return (
+        <div className={styles.tokenDemo} data-accent={tokenAccent}>
+          <div className={styles.tokenControls}>
+            <button type="button" aria-pressed={tokenAccent === "magenta"} onClick={() => setTokenAccent("magenta")}>洋红令牌</button>
+            <button type="button" aria-pressed={tokenAccent === "blue"} onClick={() => setTokenAccent("blue")}>蓝色令牌</button>
+            <button type="button" aria-pressed={tokenRound} onClick={() => setTokenRound((value) => !value)}>圆角令牌</button>
+          </div>
+          <div className={styles.tokenPreview} data-round={tokenRound}>
+            <article><span>CARD</span><strong>同一组令牌</strong><small>颜色和圆角一起更新</small></article>
+            <button type="button">主要操作</button>
+          </div>
+        </div>
+      );
+    case "transition":
+      return (
+        <div className={styles.motionDemo}>
+          <div className={styles.visualDemoHeading}>
+            <span>对比状态变化</span>
+            <button type="button" onClick={() => setMotionOn((value) => !value)}>切换位置</button>
+          </div>
+          <div className={styles.motionComparison} data-on={motionOn}>
+            <article><span>无过渡 · 瞬间跳变</span><div><i className={styles.motionInstant} /></div></article>
+            <article><span>有过渡 · 600ms ease-out</span><div><i className={styles.motionSmooth} /></div></article>
+          </div>
+        </div>
+      );
+    case "animation":
+      return (
+        <div className={styles.animationDemo}>
+          <div className={styles.visualDemoHeading}>
+            <span>持续运动</span>
+            <button type="button" onClick={() => setPaused((value) => !value)}>{paused ? "继续动画" : "暂停动画"}</button>
+          </div>
+          <div className={styles.visualOrbit} data-paused={paused}>
+            <span>KEYFRAMES</span><i /><b />
+          </div>
+        </div>
+      );
+    case "easing":
+      return (
+        <div className={styles.easingDemo}>
+          <div className={styles.visualDemoHeading}>
+            <span>相同时长，不同速度曲线</span>
+            <button type="button" onClick={() => setMotionOn((value) => !value)}>播放 / 返回</button>
+          </div>
+          <div data-on={motionOn}>
+            <article><span>linear</span><div><i /></div></article>
+            <article><span>ease-out</span><div><i /></div></article>
+            <article><span>ease-in-out</span><div><i /></div></article>
+          </div>
+        </div>
+      );
+    case "spring":
+      return (
+        <div className={styles.springDemo} data-on={motionOn}>
+          <div className={styles.visualDemoHeading}>
+            <span>超出终点后回弹</span>
+            <button type="button" onClick={() => setMotionOn((value) => !value)}>触发弹性</button>
+          </div>
+          <article><span>SPRING</span><strong>有重量感的反馈</strong></article>
+        </div>
+      );
+    case "fade":
+      return (
+        <div className={styles.fadeDemo} data-visible={fadeVisible}>
+          <div className={styles.visualDemoHeading}>
+            <span>透明度 + 轻微位移</span>
+            <button type="button" onClick={() => setFadeVisible((value) => !value)}>{fadeVisible ? "淡出" : "淡入"}</button>
+          </div>
+          <article><span>NEW MESSAGE</span><strong>内容平滑进入视线</strong></article>
+        </div>
+      );
+    case "hover":
+      return (
+        <div className={styles.stateDemo}>
+          <p>把鼠标移到卡片上</p>
+          <article className={styles.hoverStateCard}><span>HOVER</span><strong>悬停后浮起并改变边框</strong><i aria-hidden="true">↗</i></article>
+        </div>
+      );
+    case "active":
+      return (
+        <div className={styles.stateDemo}>
+          <p>按住按钮，观察按下状态</p>
+          <button className={styles.activeStateButton} type="button"><span>ACTIVE</span>按住我</button>
+        </div>
+      );
+    case "focus":
+      return (
+        <div className={styles.focusDemo}>
+          <label htmlFor="visual-focus-input">点击输入框，或按 Tab 聚焦</label>
+          <input id="visual-focus-input" placeholder="聚焦后出现清晰轮廓" />
+          <small>聚焦环不能只靠细微颜色变化</small>
+        </div>
+      );
+    case "drag":
+      return (
+        <div className={styles.dragDemo} data-dragged={dragged}>
+          <button
+            type="button"
+            draggable
+            onDragStart={(event) => event.dataTransfer.setData("text/plain", "demo-card")}
+            onClick={() => setDragged((value) => !value)}
+          >
+            <span>⋮⋮</span><strong>{dragged ? "已移动" : "拖动这张卡片"}</strong><small>也可点击演示</small>
+          </button>
+          <div
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => { event.preventDefault(); setDragged(true); }}
+          >
+            {dragged ? "✓ 已放入目标区域" : "拖到这里"}
+          </div>
+        </div>
+      );
+    case "disabled":
+      return (
+        <div className={styles.disabledDemo}>
+          <div><button type="button">可用按钮</button><small>可以点击</small></div>
+          <div><button type="button" disabled>禁用按钮</button><small>不可操作，样式也应可辨认</small></div>
+        </div>
+      );
+    case "cursor":
+      return (
+        <div className={styles.cursorDemo}>
+          <button type="button" data-cursor="pointer">pointer<small>可点击</small></button>
+          <button type="button" data-cursor="grab">grab<small>可拖拽</small></button>
+          <button type="button" data-cursor="crosshair">crosshair<small>精确选择</small></button>
+          <button type="button" data-cursor="text">text<small>选择文字</small></button>
+        </div>
+      );
+    case "selection":
+      return (
+        <div className={styles.selectionDemo}>
+          <span>SELECTION / 选中高亮</span>
+          <p><strong>请拖动选择这段文字。</strong> 选中的内容会出现电光洋红底色与深色文字，帮助用户看清选择范围。</p>
+        </div>
+      );
+    default:
+      return null;
+  }
+}
+
 export function TermDemo({ termId, compact = false }: { termId: string; compact?: boolean }) {
   const fieldId = useId();
   const [actionMessage, setActionMessage] = useState("尚未操作");
@@ -127,6 +473,15 @@ export function TermDemo({ termId, compact = false }: { termId: string; compact?
   }
 
   const filteredSearchItems = searchItems.filter((item) => item.includes(searchValue.trim()));
+
+  if (visualTermIds.has(termId)) {
+    return (
+      <div className={`${styles.termDemo} ${compact ? styles.termDemoCompact : ""}`}>
+        <VisualEffectDemo termId={termId} key={termId} />
+      </div>
+    );
+  }
+
   let content: ReactNode = null;
 
   switch (termId) {
