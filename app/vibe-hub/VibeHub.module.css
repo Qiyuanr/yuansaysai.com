@@ -3929,3 +3929,305 @@
     animation: none;
   }
 }
+
+:global(html[data-theme="light"]) .page {
+  background:
+    radial-gradient(circle at 88% 4%, rgba(42, 217, 255, 0.22), transparent 28%),
+    radial-gradient(circle at 8% 20%, rgba(165, 0, 135, 0.055), transparent 31%),
+    var(--theme-background);
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .header {
+  background: rgba(244, 248, 251, 0.78);
+  backdrop-filter: blur(16px) saturate(135%);
+}
+
+:global(html[data-theme="light"]) .heroGrid {
+  background-image:
+    linear-gradient(rgba(16, 24, 32, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 24, 32, 0.06) 1px, transparent 1px);
+}
+
+:global(html[data-theme="light"]) .hero::after {
+  color: rgba(42, 217, 255, 0.13);
+}
+
+:global(html[data-theme="light"]) .heroCopy > p:not(:first-child),
+:global(html[data-theme="light"]) .sectionHeading > p,
+:global(html[data-theme="light"]) .demoGalleryHeader p,
+:global(html[data-theme="light"]) .catalogHeader span,
+:global(html[data-theme="light"]) .catalogHeader > strong,
+:global(html[data-theme="light"]) .catalogEmpty,
+:global(html[data-theme="light"]) .statusMessage,
+:global(html[data-theme="light"]) .results p,
+:global(html[data-theme="light"]) .provenance,
+:global(html[data-theme="light"]) .footer {
+  color: rgba(var(--theme-text-rgb), 0.62);
+}
+
+:global(html[data-theme="light"]) .heroStats div,
+:global(html[data-theme="light"]) .searchForm,
+:global(html[data-theme="light"]) .quickTerms button,
+:global(html[data-theme="light"]) .demoGroupTabs button,
+:global(html[data-theme="light"]) .demoCard,
+:global(html[data-theme="light"]) .catalogGrid button,
+:global(html[data-theme="light"]) .catalogMore,
+:global(html[data-theme="light"]) .results button,
+:global(html[data-theme="light"]) .lessonState > div button {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .heroStats span,
+:global(html[data-theme="light"]) .searchForm label,
+:global(html[data-theme="light"]) .quickTerms span,
+:global(html[data-theme="light"]) .quickTerms small,
+:global(html[data-theme="light"]) .demoCardTitle > span,
+:global(html[data-theme="light"]) .demoCard > p,
+:global(html[data-theme="light"]) .catalogGrid span,
+:global(html[data-theme="light"]) .catalogGrid small,
+:global(html[data-theme="light"]) .results button > span {
+  color: rgba(var(--theme-text-rgb), 0.5);
+}
+
+:global(html[data-theme="light"]) .taxonomy {
+  background: #e8f5f9;
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .taxonomy :global(.section-kicker),
+:global(html[data-theme="light"]) .taxonomy .sectionHeading > p,
+:global(html[data-theme="light"]) .taxonomyCard p {
+  color: rgba(var(--theme-text-rgb), 0.62);
+}
+
+:global(html[data-theme="light"]) .taxonomyGrid {
+  background: rgba(var(--theme-text-rgb), 0.14);
+}
+
+:global(html[data-theme="light"]) .taxonomyCard {
+  background: rgba(255, 255, 255, 0.86);
+}
+
+:global(html[data-theme="light"]) .taxonomyCard:hover {
+  background: var(--acid);
+  color: #ffffff;
+}
+
+:global(html[data-theme="light"]) .taxonomyCard:hover p {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+:global(html[data-theme="light"]) .explorer {
+  background: transparent;
+}
+
+:global(html[data-theme="light"]) .searchForm input {
+  border-color: rgba(var(--theme-text-rgb), 0.2);
+  background: var(--theme-surface-soft);
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .searchForm input:focus {
+  box-shadow: 0 0 0 3px rgba(var(--acid-rgb), 0.16);
+}
+
+:global(html[data-theme="light"]) .searchForm button,
+:global(html[data-theme="light"]) .demoGroupTabs button[aria-selected="true"],
+:global(html[data-theme="light"]) .macroFilters button[aria-pressed="true"],
+:global(html[data-theme="light"]) .lessonState > div button:first-child {
+  background: var(--acid);
+  color: var(--accent-contrast);
+}
+
+:global(html[data-theme="light"]) .quickTerms button:hover,
+:global(html[data-theme="light"]) .quickTerms button:focus-visible,
+:global(html[data-theme="light"]) .catalogGrid button:hover,
+:global(html[data-theme="light"]) .catalogGrid button:focus-visible,
+:global(html[data-theme="light"]) .catalogMore:hover,
+:global(html[data-theme="light"]) .catalogMore:focus-visible,
+:global(html[data-theme="light"]) .results button:hover,
+:global(html[data-theme="light"]) .results button:focus-visible {
+  background: var(--acid);
+  color: var(--accent-contrast);
+}
+
+:global(html[data-theme="light"]) .quickTerms button:hover span,
+:global(html[data-theme="light"]) .quickTerms button:hover small,
+:global(html[data-theme="light"]) .quickTerms button:focus-visible span,
+:global(html[data-theme="light"]) .quickTerms button:focus-visible small,
+:global(html[data-theme="light"]) .catalogGrid button:hover span,
+:global(html[data-theme="light"]) .catalogGrid button:hover small,
+:global(html[data-theme="light"]) .catalogGrid button:focus-visible span,
+:global(html[data-theme="light"]) .catalogGrid button:focus-visible small,
+:global(html[data-theme="light"]) .results button:hover > span,
+:global(html[data-theme="light"]) .results button:focus-visible > span,
+:global(html[data-theme="light"]) .results button:hover p,
+:global(html[data-theme="light"]) .results button:focus-visible p {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+:global(html[data-theme="light"]) .demoCard {
+  background:
+    radial-gradient(circle at 100% 0, rgba(42, 217, 255, 0.12), transparent 33%),
+    var(--theme-surface);
+}
+
+:global(html[data-theme="light"]) .demoCardTitle > button {
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .macroFilters button {
+  color: rgba(var(--theme-text-rgb), 0.72);
+}
+
+:global(html[data-theme="light"]) .practice > div button {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .practiceFeedback {
+  background: rgba(42, 217, 255, 0.09);
+  color: rgba(var(--theme-text-rgb), 0.7);
+}
+
+:global(html[data-theme="light"]) .lessonOverlay {
+  background: rgba(16, 24, 32, 0.48);
+}
+
+:global(html[data-theme="light"]) .lessonPanel {
+  border-left-color: rgba(42, 217, 255, 0.48);
+  background:
+    radial-gradient(circle at 100% 0, rgba(42, 217, 255, 0.2), transparent 31%),
+    #f7fbfd;
+  box-shadow: -36px 0 100px rgba(16, 24, 32, 0.22);
+  color: var(--theme-text);
+  scrollbar-color: var(--acid) #e5eef2;
+}
+
+:global(html[data-theme="light"]) .lessonRail {
+  border-right-color: rgba(0, 111, 146, 0.18);
+  background:
+    radial-gradient(circle at 0 0, rgba(42, 217, 255, 0.18), transparent 35%),
+    #edf5f8;
+}
+
+:global(html[data-theme="light"]) .lessonRailHeader {
+  border-bottom-color: rgba(var(--theme-text-rgb), 0.12);
+}
+
+:global(html[data-theme="light"]) .lessonRailHeader span,
+:global(html[data-theme="light"]) .lessonRailHeader small,
+:global(html[data-theme="light"]) .lessonRailItem small,
+:global(html[data-theme="light"]) .lessonRailItem em,
+:global(html[data-theme="light"]) .lessonViewerHeader > div span,
+:global(html[data-theme="light"]) .lessonState > p,
+:global(html[data-theme="light"]) .lessonTopline,
+:global(html[data-theme="light"]) .lessonDescription,
+:global(html[data-theme="light"]) .flow li > span,
+:global(html[data-theme="light"]) .flow li p,
+:global(html[data-theme="light"]) .usageGrid ul,
+:global(html[data-theme="light"]) .distinctions ul,
+:global(html[data-theme="light"]) .boundary p,
+:global(html[data-theme="light"]) .agentPrompt blockquote,
+:global(html[data-theme="light"]) .references a {
+  color: rgba(var(--theme-text-rgb), 0.62);
+}
+
+:global(html[data-theme="light"]) .lessonRailItem {
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .lessonRailItem > i {
+  border-color: rgba(var(--theme-text-rgb), 0.16);
+  color: rgba(var(--theme-text-rgb), 0.5);
+}
+
+:global(html[data-theme="light"]) .lessonRailItem:hover,
+:global(html[data-theme="light"]) .lessonRailItem:focus-visible {
+  border-color: rgba(0, 111, 146, 0.42);
+  background: rgba(42, 217, 255, 0.12);
+}
+
+:global(html[data-theme="light"]) .lessonRailItem[aria-current="page"] {
+  border-color: rgba(0, 111, 146, 0.56);
+  background: linear-gradient(120deg, rgba(42, 217, 255, 0.22), rgba(165, 0, 135, 0.055));
+}
+
+:global(html[data-theme="light"]) .lessonRailItem[aria-current="page"] > i {
+  color: var(--accent-contrast);
+}
+
+:global(html[data-theme="light"]) .lessonDetail {
+  scrollbar-color: var(--acid) #e5eef2;
+}
+
+:global(html[data-theme="light"]) .lessonViewerHeader {
+  background: rgba(247, 251, 253, 0.9);
+}
+
+:global(html[data-theme="light"]) .lessonViewerHeader > button {
+  border-color: rgba(var(--theme-text-rgb), 0.2);
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .lessonViewerHeader > button:hover,
+:global(html[data-theme="light"]) .lessonViewerHeader > button:focus-visible,
+:global(html[data-theme="light"]) .backToTop:hover,
+:global(html[data-theme="light"]) .backToTop:focus-visible {
+  color: var(--accent-contrast);
+}
+
+:global(html[data-theme="light"]) .lessonViewerHeader > button i {
+  background: rgba(var(--theme-text-rgb), 0.07);
+}
+
+:global(html[data-theme="light"]) .lessonState > i {
+  border-color: rgba(var(--theme-text-rgb), 0.15);
+  border-top-color: var(--acid);
+  border-right-color: var(--mint);
+}
+
+:global(html[data-theme="light"]) .flow li,
+:global(html[data-theme="light"]) .usageGrid > div {
+  background: var(--theme-surface);
+}
+
+:global(html[data-theme="light"]) .boundary,
+:global(html[data-theme="light"]) .agentPrompt {
+  background: rgba(42, 217, 255, 0.1);
+}
+
+:global(html[data-theme="light"]) .backToTop {
+  border-color: rgba(var(--acid-rgb), 0.44);
+  background: rgba(244, 248, 251, 0.88);
+  color: var(--theme-text);
+}
+
+:global(html[data-theme="light"]) .backToTop i {
+  background: rgba(var(--theme-text-rgb), 0.07);
+}
+
+:global(html[data-theme="light"]) .companion {
+  background: linear-gradient(135deg, #83e7ff 0%, #c7ebf5 56%, #efb6e3 138%);
+}
+
+:global(html[data-theme="light"]) .homeSpotlight {
+  background: linear-gradient(135deg, #88e9ff 0%, #cdeeff 62%, #efb9e5 126%);
+}
+
+:global(html[data-theme="light"]) .homeSpotlight h2 em {
+  color: var(--acid);
+}
+
+@media (max-width: 780px) {
+  :global(html[data-theme="light"]) .lessonPanel {
+    border-top-color: rgba(42, 217, 255, 0.48);
+  }
+
+  :global(html[data-theme="light"]) .lessonRail {
+    border-bottom-color: rgba(0, 111, 146, 0.18);
+  }
+}

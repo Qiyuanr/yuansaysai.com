@@ -15,8 +15,6 @@ type Particle = {
   accent: boolean;
 };
 
-const COLORS = ["#ff2bd6", "#2ad9ff", "#f4f0e8"];
-
 export function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -40,6 +38,31 @@ export function ParticleField() {
     let canvasVisible = true;
     let particles: Particle[] = [];
     let links: Array<[number, number]> = [];
+    let palette = {
+      colors: ["#ff2bd6", "#2ad9ff", "#f4f0e8"],
+      primaryRgb: "255, 43, 214",
+      secondaryRgb: "42, 217, 255",
+    };
+
+    const readThemePalette = () => {
+      const styles = window.getComputedStyle(document.documentElement);
+      const read = (name: string, fallback: string) =>
+        styles.getPropertyValue(name).trim() || fallback;
+
+      palette = {
+        colors: [
+          read("--particle-primary", "#ff2bd6"),
+          read("--particle-secondary", "#2ad9ff"),
+          read("--particle-neutral", "#f4f0e8"),
+        ],
+        primaryRgb: read("--acid-rgb", "255, 43, 214"),
+        secondaryRgb: read("--mint-rgb", "42, 217, 255"),
+      };
+
+      particles.forEach((particle, index) => {
+        particle.color = palette.colors[index % palette.colors.length];
+      });
+    };
 
     const pointer = {
       x: 0,
@@ -83,7 +106,7 @@ export function ParticleField() {
           vy: (Math.random() - 0.5) * 0.7,
           radius: index % 13 === 0 ? 3.1 : 1.2 + Math.random(),
           phase: Math.random() * Math.PI * 2,
-          color: COLORS[index % COLORS.length],
+          color: palette.colors[index % palette.colors.length],
           accent: index % 13 === 0,
         };
       });
@@ -246,8 +269,8 @@ export function ParticleField() {
         context.lineTo(end.x, end.y);
         context.strokeStyle =
           (startIndex + endIndex) % 4 === 0
-            ? `rgba(42, 217, 255, ${alpha * 0.9})`
-            : `rgba(255, 43, 214, ${alpha})`;
+            ? `rgba(${palette.secondaryRgb}, ${alpha * 0.9})`
+            : `rgba(${palette.primaryRgb}, ${alpha})`;
         context.lineWidth = 1;
         context.stroke();
       });
@@ -270,7 +293,7 @@ export function ParticleField() {
           context.beginPath();
           context.moveTo(pointer.x, pointer.y);
           context.lineTo(particle.x, particle.y);
-          context.strokeStyle = `rgba(42, 217, 255, ${
+          context.strokeStyle = `rgba(${palette.secondaryRgb}, ${
             0.12 + 0.3 * (1 - normalizedDistance)
           })`;
           context.lineWidth = 1;
@@ -288,7 +311,7 @@ export function ParticleField() {
             0,
             Math.PI * 2,
           );
-          context.fillStyle = "rgba(255, 43, 214, 0.09)";
+          context.fillStyle = `rgba(${palette.primaryRgb}, 0.09)`;
           context.fill();
         }
 
@@ -399,6 +422,12 @@ export function ParticleField() {
       { threshold: 0.02 },
     );
 
+    readThemePalette();
+    const themeObserver = new MutationObserver(readThemePalette);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
     resize();
     render(0, 0);
     startAnimation();
@@ -411,6 +440,7 @@ export function ParticleField() {
 
     return () => {
       cancelAnimationFrame(frame);
+      themeObserver.disconnect();
       observer.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", updatePointer);

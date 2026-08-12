@@ -247,7 +247,7 @@ export default function Home() {
             <div aria-label="板块规模">
               <span>250 个术语</span>
               <span>7 大分类</span>
-              <span>29 个可操作示例</span>
+              <span>50 个可操作示例</span>
             </div>
             <a className="button" href="/vibe-hub">
               打开术语图鉴 <span aria-hidden="true">→</span>
