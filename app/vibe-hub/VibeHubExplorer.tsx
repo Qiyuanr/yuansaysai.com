@@ -21,6 +21,15 @@ type SearchResult = {
   url: string;
 };
 
+type DetailContext = "quick" | "search" | "demo" | "catalog";
+
+type LessonNavigationItem = {
+  id: string;
+  title: string;
+  secondaryTitle?: string | null;
+  eyebrow?: string;
+};
+
 type FlowStep = {
   id: string;
   label: string;
@@ -145,6 +154,8 @@ export function VibeHubExplorer() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [selectedTermId, setSelectedTermId] = useState<string | null>(null);
+  const [detailContext, setDetailContext] =
+    useState<DetailContext>("catalog");
   const [activeMacro, setActiveMacro] = useState("all");
   const [activeDemoGroup, setActiveDemoGroup] = useState("button-link");
   const [visibleTermCount, setVisibleTermCount] = useState(INITIAL_TERM_COUNT);
@@ -157,6 +168,7 @@ export function VibeHubExplorer() {
   const detailRequestRef = useRef<AbortController | null>(null);
   const lastTriggerRef = useRef<HTMLElement | null>(null);
   const lessonPanelRef = useRef<HTMLElement | null>(null);
+  const activeTermRef = useRef<HTMLButtonElement | null>(null);
 
   const closeLesson = useCallback(() => {
     const activeRequest = detailRequestRef.current;
@@ -236,13 +248,25 @@ export function VibeHubExplorer() {
     [],
   );
 
-  async function loadLesson(id: string) {
+  useEffect(() => {
+    if (!detailOpen || !selectedTermId) return;
+    const frame = window.requestAnimationFrame(() => {
+      activeTermRef.current?.scrollIntoView({ block: "nearest" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [detailOpen, selectedTermId]);
+
+  async function loadLesson(
+    id: string,
+    context: DetailContext = detailContext,
+  ) {
     detailRequestRef.current?.abort();
     const controller = new AbortController();
     detailRequestRef.current = controller;
     if (!detailOpen && document.activeElement instanceof HTMLElement) {
       lastTriggerRef.current = document.activeElement;
     }
+    setDetailContext(context);
     setSelectedTermId(id);
     setDetailLoading(true);
     setDetailError("");
@@ -327,6 +351,45 @@ export function VibeHubExplorer() {
     return matchesMacro && matchesQuery;
   });
   const displayedTerms = visibleTerms.slice(0, visibleTermCount);
+  const activeMacroLabel =
+    macroFilters.find((filter) => filter.id === activeMacro)?.label || "全部";
+  let lessonNavigationLabel = `目录 · ${activeMacroLabel}`;
+  let lessonNavigationItems: LessonNavigationItem[] = visibleTerms.map(
+    (term) => ({
+      id: term.id,
+      title: term.title,
+      secondaryTitle: term.secondaryTitle,
+      eyebrow: term.macroLabel,
+    }),
+  );
+
+  if (detailContext === "quick") {
+    lessonNavigationLabel = "常用术语";
+    lessonNavigationItems = quickTerms.map((term) => ({
+      id: term.id,
+      title: term.title,
+      secondaryTitle: term.secondaryTitle,
+      eyebrow: "快捷入口",
+    }));
+  } else if (detailContext === "search") {
+    lessonNavigationLabel = query.trim() ? `搜索 · ${query.trim()}` : "搜索结果";
+    lessonNavigationItems = results.map((result) => ({
+      id: result.id,
+      title: result.title,
+      secondaryTitle: result.secondaryTitle,
+      eyebrow:
+        [result.macroCategory, result.category].filter(Boolean).join(" / ") ||
+        "搜索结果",
+    }));
+  } else if (detailContext === "demo") {
+    lessonNavigationLabel = currentDemoGroup.label;
+    lessonNavigationItems = currentDemoGroup.terms.map((term) => ({
+      id: term.id,
+      title: term.title,
+      secondaryTitle: term.secondaryTitle,
+      eyebrow: "组件图鉴",
+    }));
+  }
 
   return (
     <section className={`${styles.section} ${styles.explorer}`} id="explorer">
@@ -377,7 +440,7 @@ export function VibeHubExplorer() {
           {results.map((result) => (
             <button
               type="button"
-              onClick={() => loadLesson(result.id)}
+              onClick={() => loadLesson(result.id, "search")}
               key={result.id}
             >
               <span>
@@ -400,7 +463,7 @@ export function VibeHubExplorer() {
         {quickTerms.map((item) => (
           <button
             type="button"
-            onClick={() => loadLesson(item.id)}
+            onClick={() => loadLesson(item.id, "quick")}
             key={item.id}
           >
             <span>{item.secondaryTitle}</span>
@@ -443,7 +506,10 @@ export function VibeHubExplorer() {
             <article className={styles.demoCard} key={term.id}>
               <div className={styles.demoCardTitle}>
                 <span>{term.secondaryTitle}</span>
-                <button type="button" onClick={() => loadLesson(term.id)}>
+                <button
+                  type="button"
+                  onClick={() => loadLesson(term.id, "demo")}
+                >
                   {term.title} <i aria-hidden="true">↘</i>
                 </button>
               </div>
@@ -482,7 +548,7 @@ export function VibeHubExplorer() {
           {displayedTerms.map((term) => (
             <button
               type="button"
-              onClick={() => loadLesson(term.id)}
+              onClick={() => loadLesson(term.id, "catalog")}
               key={term.id}
             >
               <span>{term.macroLabel}</span>
@@ -530,20 +596,60 @@ export function VibeHubExplorer() {
                 aria-labelledby={lesson ? "lesson-title" : undefined}
                 aria-label={lesson ? undefined : "术语详情"}
               >
-                <header className={styles.lessonViewerHeader}>
-                  <div>
-                    <span>TERM VIEWER / 术语详情</span>
-                    <strong>
-                      {detailLoading
-                        ? "正在读取…"
-                        : lesson?.title || "暂时无法打开"}
-                    </strong>
-                  </div>
-                  <button type="button" onClick={closeLesson} autoFocus>
-                    <span>关闭</span>
-                    <i aria-hidden="true">×</i>
-                  </button>
-                </header>
+                <aside className={styles.lessonRail} aria-label="同组术语">
+                  <header className={styles.lessonRailHeader}>
+                    <div>
+                      <span>OTHER TERMS / 快速切换</span>
+                      <strong>{lessonNavigationLabel}</strong>
+                    </div>
+                    <small>{lessonNavigationItems.length} 项</small>
+                  </header>
+                  <nav
+                    className={styles.lessonRailList}
+                    aria-label={`${lessonNavigationLabel}中的其他术语`}
+                  >
+                    {lessonNavigationItems.map((item, index) => {
+                      const active = selectedTermId === item.id;
+                      return (
+                        <button
+                          className={styles.lessonRailItem}
+                          type="button"
+                          aria-current={active ? "page" : undefined}
+                          onClick={() => loadLesson(item.id, detailContext)}
+                          ref={active ? activeTermRef : undefined}
+                          key={item.id}
+                        >
+                          <i aria-hidden="true">
+                            {String(index + 1).padStart(2, "0")}
+                          </i>
+                          <span>
+                            <small>{item.eyebrow || "术语"}</small>
+                            <strong>{item.title}</strong>
+                            {item.secondaryTitle ? (
+                              <em>{item.secondaryTitle}</em>
+                            ) : null}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </nav>
+                </aside>
+
+                <div className={styles.lessonDetail}>
+                  <header className={styles.lessonViewerHeader}>
+                    <div>
+                      <span>TERM VIEWER / 术语详情</span>
+                      <strong>
+                        {detailLoading
+                          ? "正在读取…"
+                          : lesson?.title || "暂时无法打开"}
+                      </strong>
+                    </div>
+                    <button type="button" onClick={closeLesson} autoFocus>
+                      <span>关闭</span>
+                      <i aria-hidden="true">×</i>
+                    </button>
+                  </header>
 
                 {detailLoading ? (
                   <div className={styles.lessonState} aria-live="polite">
@@ -744,6 +850,7 @@ export function VibeHubExplorer() {
                     ) : null}
                   </article>
                 ) : null}
+                </div>
               </section>
             </div>,
             document.body,
