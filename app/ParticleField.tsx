@@ -15,7 +15,7 @@ type Particle = {
   accent: boolean;
 };
 
-const COLORS = ["#d9ff43", "#b6f1df", "#f4f0e8"];
+const COLORS = ["#ff2bd6", "#2ad9ff", "#f4f0e8"];
 
 export function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -246,8 +246,8 @@ export function ParticleField() {
         context.lineTo(end.x, end.y);
         context.strokeStyle =
           (startIndex + endIndex) % 4 === 0
-            ? `rgba(182, 241, 223, ${alpha * 0.9})`
-            : `rgba(217, 255, 67, ${alpha})`;
+            ? `rgba(42, 217, 255, ${alpha * 0.9})`
+            : `rgba(255, 43, 214, ${alpha})`;
         context.lineWidth = 1;
         context.stroke();
       });
@@ -270,7 +270,7 @@ export function ParticleField() {
           context.beginPath();
           context.moveTo(pointer.x, pointer.y);
           context.lineTo(particle.x, particle.y);
-          context.strokeStyle = `rgba(182, 241, 223, ${
+          context.strokeStyle = `rgba(42, 217, 255, ${
             0.12 + 0.3 * (1 - normalizedDistance)
           })`;
           context.lineWidth = 1;
@@ -288,7 +288,7 @@ export function ParticleField() {
             0,
             Math.PI * 2,
           );
-          context.fillStyle = "rgba(217, 255, 67, 0.09)";
+          context.fillStyle = "rgba(255, 43, 214, 0.09)";
           context.fill();
         }
 

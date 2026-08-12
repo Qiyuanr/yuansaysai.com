@@ -1,9 +1,13 @@
 :root {
   --ink: #0c0d0d;
   --paper: #f2efe8;
-  --acid: #d9ff43;
-  --mint: #b6f1df;
-  --coral: #ff7f5c;
+  --electric-pink: #ff2bd6;
+  --electric-blue: #2ad9ff;
+  --electric-violet: #8b5cff;
+  --electric-deep: #65117a;
+  --acid: var(--electric-pink);
+  --mint: var(--electric-blue);
+  --coral: var(--electric-violet);
   --line: rgba(242, 239, 232, 0.16);
   --font-geist-sans: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-geist-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
@@ -117,7 +121,7 @@ a {
   z-index: -1;
   background:
     linear-gradient(90deg, rgba(12, 13, 13, 0.98) 0%, rgba(12, 13, 13, 0.74) 47%, rgba(12, 13, 13, 0.18) 100%),
-    radial-gradient(circle at 75% 48%, #26332f 0%, #111313 48%, #0c0d0d 75%);
+    radial-gradient(circle at 75% 48%, #182654 0%, #21142f 48%, #0c0d0d 75%);
 }
 
 .hero-glow {
@@ -130,10 +134,11 @@ a {
   right: 10vw;
   top: 25%;
   border-radius: 50%;
-  border: 1px solid rgba(217, 255, 67, 0.08);
+  border: 1px solid rgba(255, 43, 214, 0.18);
   box-shadow:
-    0 0 160px rgba(182, 241, 223, 0.08),
-    inset 0 0 100px rgba(217, 255, 67, 0.03);
+    0 0 170px rgba(42, 217, 255, 0.14),
+    0 0 90px rgba(255, 43, 214, 0.1),
+    inset 0 0 100px rgba(255, 43, 214, 0.05);
   pointer-events: none;
 }
 
@@ -174,7 +179,7 @@ a {
   height: 7px;
   border-radius: 50%;
   background: var(--acid);
-  box-shadow: 0 0 14px rgba(217, 255, 67, 0.9);
+  box-shadow: 0 0 14px rgba(255, 43, 214, 0.9);
 }
 
 .hero h1 {
@@ -321,7 +326,7 @@ a {
 }
 
 .manifesto em {
-  color: #789a00;
+  color: var(--electric-deep);
 }
 
 .manifesto > span {
@@ -519,7 +524,7 @@ a {
 }
 
 .experiments {
-  background: var(--acid);
+  background: linear-gradient(135deg, var(--acid) 0%, #b84cff 54%, var(--mint) 132%);
   color: var(--ink);
 }
 
@@ -549,7 +554,7 @@ a {
   display: flex;
   flex-direction: column;
   padding: 28px;
-  background: var(--acid);
+  background: rgba(255, 255, 255, 0.065);
 }
 
 .experiment-card > span {
@@ -593,7 +598,7 @@ a {
 }
 
 .experiment-card:nth-child(2) .experiment-orbit i {
-  background: #789a00;
+  background: #006d8f;
   animation-duration: 11s;
 }
 
@@ -672,7 +677,8 @@ a {
 .article-page {
   min-height: 100svh;
   background:
-    radial-gradient(circle at 88% 12%, rgba(182, 241, 223, 0.08), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(42, 217, 255, 0.1), transparent 30%),
+    radial-gradient(circle at 8% 28%, rgba(255, 43, 214, 0.065), transparent 26%),
     var(--ink);
 }
 
@@ -769,7 +775,7 @@ a {
 .article-source a {
   color: var(--acid);
   text-decoration: underline;
-  text-decoration-color: rgba(217, 255, 67, 0.45);
+  text-decoration-color: rgba(255, 43, 214, 0.45);
   text-underline-offset: 4px;
 }
 
@@ -848,7 +854,7 @@ a {
   margin: 28px 0;
   padding: 26px 28px;
   border-left: 3px solid var(--acid);
-  background: rgba(217, 255, 67, 0.07);
+  background: rgba(255, 43, 214, 0.07);
   color: var(--paper);
   font-size: 15px;
   line-height: 1.85;
@@ -1064,7 +1070,7 @@ footer > div {
   .hero::before {
     background:
       linear-gradient(0deg, rgba(12, 13, 13, 0.98) 0%, rgba(12, 13, 13, 0.56) 68%, rgba(12, 13, 13, 0.15) 100%),
-      radial-gradient(circle at 58% 42%, #26332f 0%, #0c0d0d 68%);
+      radial-gradient(circle at 58% 42%, #182654 0%, #21142f 42%, #0c0d0d 68%);
   }
 
   .hero-copy {
