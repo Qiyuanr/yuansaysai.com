@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { VibeHubExplorer } from "./VibeHubExplorer";
 import styles from "./VibeHub.module.css";
 
@@ -13,7 +14,12 @@ const taxonomy = [
   { id: "frontend", label: "前端", count: 122, note: "界面、组件、布局与交互" },
   { id: "backend", label: "后端", count: 32, note: "接口、数据、权限与上线" },
   { id: "product", label: "产品", count: 11, note: "需求、规划与验证" },
-  { id: "technology", label: "技术栈", count: 25, note: "工具、测试、语言与框架" },
+  {
+    id: "technology",
+    label: "技术栈",
+    count: 25,
+    note: "工具、测试、语言与框架",
+  },
   { id: "ai", label: "AI", count: 24, note: "上下文、Agent、输出与成本" },
   { id: "git", label: "Git", count: 12, note: "版本、分支、提交与协作" },
   { id: "design", label: "设计风格", count: 24, note: "视觉语言与界面气质" },
@@ -44,10 +50,10 @@ export default function VibeHubPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <a className="brand" href="/" aria-label="返回予安的 AI 偏方首页">
+        <Link className="brand" href="/" aria-label="返回予安的 AI 偏方首页">
           <span className="brand-mark">Y</span>
           <span>予安的 AI 偏方</span>
-        </a>
+        </Link>
         <nav aria-label="术语图鉴导航">
           <a href="#taxonomy">分类</a>
           <a href="#explorer">搜索</a>
@@ -103,11 +109,19 @@ export default function VibeHubPage() {
             <p className="section-kicker">TAXONOMY / 分类地图</p>
             <h2>先确定问题在哪一层</h2>
           </div>
-          <p>术语不是为了显得专业，而是帮助你缩小问题范围、减少与 Agent 来回猜测。</p>
+          <p>
+            术语不是为了显得专业，而是帮助你缩小问题范围、减少与 Agent
+            来回猜测。
+          </p>
         </div>
         <div className={styles.taxonomyGrid}>
           {taxonomy.map((item, index) => (
-            <a href="#catalog" className={styles.taxonomyCard} key={item.id}>
+            <a
+              href="#catalog"
+              className={styles.taxonomyCard}
+              data-vibe-macro={item.id}
+              key={item.id}
+            >
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
                 <h3>{item.label}</h3>
@@ -121,7 +135,10 @@ export default function VibeHubPage() {
 
       <VibeHubExplorer />
 
-      <section className={`${styles.section} ${styles.companion}`} id="companion">
+      <section
+        className={`${styles.section} ${styles.companion}`}
+        id="companion"
+      >
         <div className={styles.sectionHeading}>
           <div>
             <p className="section-kicker">GO FURTHER / 延伸入口</p>
@@ -131,7 +148,12 @@ export default function VibeHubPage() {
         </div>
         <div className={styles.companionGrid}>
           {companionEntries.map((entry) => (
-            <a href={entry.href} target="_blank" rel="noreferrer" key={entry.title}>
+            <a
+              href={entry.href}
+              target="_blank"
+              rel="noreferrer"
+              key={entry.title}
+            >
               <span>{entry.eyebrow}</span>
               <h3>{entry.title}</h3>
               <p>{entry.copy}</p>
@@ -144,7 +166,8 @@ export default function VibeHubPage() {
       <section className={styles.provenance} aria-label="内容来源说明">
         <p>
           本板块是独立的信息入口，不复制 VibeHub 的视觉设计或整站正文。
-          术语搜索与详情由其公开 API 实时返回，页面保留原文链接；互动示例在本站独立实现。
+          术语搜索与详情由其公开 API
+          实时返回，页面保留原文链接；互动示例在本站独立实现。
         </p>
         <a href="https://vibe-hub.org/" target="_blank" rel="noreferrer">
           vibe-hub.org ↗
@@ -152,10 +175,10 @@ export default function VibeHubPage() {
       </section>
 
       <footer className={styles.footer}>
-        <a className="brand footer-brand" href="/">
+        <Link className="brand footer-brand" href="/">
           <span className="brand-mark">Y</span>
           <span>予安的 AI 偏方</span>
-        </a>
+        </Link>
         <p>Vibe Coding, explained simply.</p>
         <a href="#top">回到顶部 ↑</a>
       </footer>
